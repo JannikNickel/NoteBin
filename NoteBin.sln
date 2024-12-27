@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteBin", "src\NoteBin.csproj", "{474E8CF6-205C-4600-95DF-5BDEF347D6D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteBin.Test", "test\NoteBin.Test.csproj", "{1EEDADB4-7778-47B7-9158-027B1058F262}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{474E8CF6-205C-4600-95DF-5BDEF347D6D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474E8CF6-205C-4600-95DF-5BDEF347D6D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474E8CF6-205C-4600-95DF-5BDEF347D6D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474E8CF6-205C-4600-95DF-5BDEF347D6D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EEDADB4-7778-47B7-9158-027B1058F262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EEDADB4-7778-47B7-9158-027B1058F262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EEDADB4-7778-47B7-9158-027B1058F262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EEDADB4-7778-47B7-9158-027B1058F262}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

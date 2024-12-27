@@ -1,0 +1,8 @@
+:root {
+    --toastify-font-family: "Fira Mono", monospace;
+    --toastify-toast-bd-radius: 0.5rem;
+}
+
+.toastContainer {
+    font-size: 0.75rem;
+}
