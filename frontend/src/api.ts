@@ -9,6 +9,11 @@ export interface NoteCreateResponse {
     id: string
 }
 
+export interface Note {
+    syntax: string,
+    content: string
+}
+
 interface ErrorResponse {
     error: string
 }
@@ -19,16 +24,18 @@ async function getErrorMessage(response: Response): Promise<string> {
     return errorInfo?.error || `[${response.status}] ${response.statusText}`;
 }
 
-export async function apiRequest<TReq, TRes>(path: string, requestBody: TReq, options: RequestInit = {}): Promise<Result<TRes, string>> {
+export async function apiRequest<TReq extends Object, TRes>(path: string, requestBody: TReq, options: RequestInit = {}): Promise<Result<TRes, string>> {
     const defHeaders = {
         "Content-Type": "application/json"
     };
+
+    const body = (requestBody && Object.keys(requestBody).length > 0) ? { body: JSON.stringify(requestBody) } : {}
     const mergedOptions: RequestInit = {
         headers: {
             ...defHeaders,
             ...(options.headers || {})
         },
-        body: JSON.stringify(requestBody),
+        ...body,
         ...options
     };
 

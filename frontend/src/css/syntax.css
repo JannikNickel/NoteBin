@@ -1,0 +1,37 @@
+.hljs-comment,
+.hljs-meta {
+    color: #aCb7bf8c;
+}
+
+.hljs-string,
+.hljs-literal {
+    color: #aad94c;
+}
+
+.hljs-number,
+.hljs-built_in,
+.hljs-type {
+    color: #e6b450;
+}
+
+.hljs-operator {
+    color: #e67350;
+}
+
+.hljs-keyword {
+    color: #ff8f40;
+}
+
+.hljs-title,
+.hljs-section {
+    color: #ffb454;
+}
+
+/* .hljs-params {
+    color: #ffee99;
+} */
+
+.hljs-tag,
+.hljs-punctuation {
+    color: #bfbdb6b3;
+}

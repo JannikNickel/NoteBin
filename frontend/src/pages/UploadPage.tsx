@@ -1,15 +1,16 @@
-import "../css/upload.css"
-import { useState, ChangeEvent } from "react"
-import { useNavigate } from "react-router-dom"
-import ToastContainer from "../components/ToastContainer"
-import SyntaxSelector from "../components/SyntaxSelector"
-import showErrorToast from "../utils/toastUtils"
-import { ProgrammingLanguage, languages } from "../language"
-import { apiRequest, NoteCreateRequest, NoteCreateResponse } from "../api"
+import "../css/upload.css";
+import { useState, useRef, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import ToastContainer from "../components/ToastContainer";
+import SyntaxSelector from "../components/SyntaxSelector";
+import showErrorToast from "../utils/toastUtils";
+import { ProgrammingLanguage, languages } from "../language";
+import { apiRequest, NoteCreateRequest, NoteCreateResponse } from "../api";
 
 const UploadPage: React.FC = () => {
     const [language, setLanguage] = useState<ProgrammingLanguage>(languages[0]);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const codeEditorRef = useRef<HTMLTextAreaElement>(null);
     const navigate = useNavigate();
     
     const handleSyntaxChange = (e: ChangeEvent<HTMLSelectElement>): void => {
@@ -24,8 +25,7 @@ const UploadPage: React.FC = () => {
 
         setSubmitting(true);
         try {
-            const codeEditor = document.getElementById("code-editor") as HTMLTextAreaElement;
-            const requestBody: NoteCreateRequest = { syntax: "plain", content: codeEditor.value };
+            const requestBody: NoteCreateRequest = { syntax: language.id, content: codeEditorRef.current?.value || "" };
             const response = await apiRequest<NoteCreateRequest, NoteCreateResponse>("/api/note", requestBody, {
                 method: "POST"
             });
@@ -43,7 +43,7 @@ const UploadPage: React.FC = () => {
         <>
             <div className="flex justify-center items-center p-0">
                 <textarea
-                    id="code-editor"
+                    ref={codeEditorRef}
                     className="text-area"
                     placeholder="..." />
             </div>

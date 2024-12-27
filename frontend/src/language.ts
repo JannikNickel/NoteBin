@@ -1,4 +1,4 @@
-import langs from "./assets/languages.json"
+import langs from "./assets/languages.json";
 
 export type ProgrammingLanguage = {
     id: string;

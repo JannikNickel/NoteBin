@@ -1,9 +1,9 @@
-import "../css/toast.css"
+import "../css/toast.css";
 import { ToastContainer as TContainer, Bounce } from "react-toastify";
 
 const ToastContainer: React.FC = () => (
     <TContainer
-        className="toastContainer"
+        className="toast-container"
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
