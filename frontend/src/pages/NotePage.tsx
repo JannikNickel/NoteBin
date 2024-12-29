@@ -2,7 +2,7 @@ import "../css/note.css";
 import "../css/syntax.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import hljs from "highlight.js"; //TODO dont load all languages
+import hljs from "highlight.js";
 import { apiRequest, Note } from "../api";
 
 const NotePage: React.FC = () => {
@@ -34,16 +34,21 @@ const NotePage: React.FC = () => {
     useEffect(() => {
         if (note?.content) {
             document.querySelectorAll("pre code").forEach((block) => {
-                hljs.highlightElement(block as HTMLElement);
+                if (note.syntax === "auto") {
+                    const result = hljs.highlightAuto(note.content);
+                    block.innerHTML = result.value;
+                } else {
+                    hljs.highlightElement(block as HTMLElement);
+                }
             });
         }
     }, [note]);
 
     if (loading) {
-        return <p>Loading...</p> //TODO larger information
+        return <p className="p-2">Loading...</p>
     }
     if (error) {
-        return <p>Error: {error}</p> // TODO larger information
+        return <p className="p-2">Error: {error}</p>
     }
 
     let language = `language-${note?.syntax || "plaintext"}`;

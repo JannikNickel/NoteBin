@@ -1,4 +1,5 @@
 import { Err, Ok, Result } from "./utils/result";
+import { getReasonPhrase } from "http-status-codes";
 
 export interface NoteCreateRequest {
     syntax: string,
@@ -21,7 +22,8 @@ interface ErrorResponse {
 async function getErrorMessage(response: Response): Promise<string> {
     let empty = response.headers.get("Content-Length") !== "0";
     const errorInfo: ErrorResponse | null = empty ? await response.json() : null;
-    return errorInfo?.error || `[${response.status}] ${response.statusText}`;
+    const statusText = getReasonPhrase(response.status);
+    return errorInfo?.error || `[${response.status}] ${statusText}`;
 }
 
 export async function apiRequest<TReq extends Object, TRes>(path: string, requestBody: TReq, options: RequestInit = {}): Promise<Result<TRes, string>> {
