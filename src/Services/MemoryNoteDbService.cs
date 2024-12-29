@@ -9,38 +9,51 @@ namespace NoteBin.Services
     public class MemoryNoteDbService : INoteDbService
     {
         private readonly INoteIdGenService idGenService;
+        private readonly INoteContentService contentService;
         private ConcurrentDictionary<string, Note> notes = new ConcurrentDictionary<string, Note>();
 
-        public MemoryNoteDbService(INoteIdGenService idGenService)
+        public MemoryNoteDbService(INoteIdGenService idGenService, INoteContentService contentService)
         {
             this.idGenService = idGenService;
+            this.contentService = contentService;
         }
 
-        public Task<Note?> GetNote(string id)
+        public async Task<Note?> GetNote(string id)
         {
             if(notes.TryGetValue(id, out Note? note))
             {
-                return Task.FromResult<Note?>(note);
+                string? content = await contentService.GetContent(id);
+                if(content != null)
+                {
+                    note.Content = content;
+                    return note;
+                }
             }
-            return Task.FromResult<Note?>(null);
+            return null;
         }
 
-        public Task<Note?> SaveNote(NoteCreateDto createDto)
+        public async Task<Note?> SaveNote(NoteCreateDto createDto)
         {
             if(createDto.Syntax == null || createDto.Content == null)
             {
-                return Task.FromResult<Note?>(null);
+                return null;
             }
 
             Note note;
             do
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, DateTime.Now, createDto.Syntax, createDto.Content);
+                note = new Note(id, DateTime.Now, createDto.Syntax);
             }
             while(!notes.TryAdd(note.Id, note));
 
-            return Task.FromResult<Note?>(note);
+            bool savedContent = await contentService.SaveContent(note.Id, createDto.Content);
+            if(!savedContent)
+            {
+                notes.TryRemove(note.Id, out _);
+            }
+
+            return note;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace NoteBin
             ConfigureService(builder.Services, builder.Configuration);
 
             WebApplication app = builder.Build();
+            ValidateConfiguration(app);
             ConfigureMiddleware(app);
             ConfigureEndpoints(app);
             app.Run();
@@ -37,6 +38,11 @@ namespace NoteBin
             services.AddControllers();
         }
 
+        private static void ValidateConfiguration(WebApplication app)
+        {
+            NoteStorageConfiguration.Initialize(app);
+        }
+
         private static void ConfigureMiddleware(WebApplication app)
         {
             if(app.Environment.IsDevelopment())
@@ -51,7 +57,7 @@ namespace NoteBin
 
             app.UseRequestLogging();
 
-            string path = Path.Combine(app.Environment.ContentRootPath, "..", "web");
+            string path = Path.GetFullPath("web");//TODO this should be part of the config
             PhysicalFileProvider webPath = new PhysicalFileProvider(path);
             app.Environment.WebRootFileProvider = webPath;
 
