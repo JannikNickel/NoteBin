@@ -3,7 +3,7 @@ import { useState, useRef, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import ToastContainer from "../components/ToastContainer";
 import SyntaxSelector from "../components/SyntaxSelector";
-import showErrorToast from "../utils/toastUtils";
+import showErrorToast from "../utils/toast-utils";
 import { ProgrammingLanguage, languages } from "../language";
 import { apiRequest, NoteCreateRequest, NoteCreateResponse } from "../api";
 
