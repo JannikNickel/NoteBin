@@ -18,7 +18,7 @@ namespace NoteBin.Models.Sqlite
         protected void BuildCommand()
         {
             string columns = string.Join(",", columnNames);
-            string command = $"SELECT {columns} FROM {tableName};";
+            string command = $"SELECT {columns} FROM {tableName} WHERE {BuildFilter()};";
             cmd.CommandText = command;
         }
 
