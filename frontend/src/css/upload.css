@@ -1,6 +1,6 @@
 .text-area {
-  background-color: theme("colors.background-color");
-  color: theme("colors.text-color");
+  background-color: theme("colors.background");
+  color: theme("colors.text");
   border: none;
   border-radius: 0;
   width: 100vw;
@@ -11,10 +11,18 @@
   font-weight: 400;
 }
 
-.syntax-dropdown {
-  background-color: theme("colors.background-color");
-  color: theme("colors.text-color");
+.toolbar {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: row-reverse;
+  column-gap: 0.75rem;
+}
+
+.toolbar-element {
   border: 1px solid #444;
   padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
   font-size: 1rem;
 }

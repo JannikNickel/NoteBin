@@ -1,6 +1,6 @@
 .text-container {
-  background-color: theme("colors.background-color");
-  color: theme("colors.text-color");
+  background-color: theme("colors.background");
+  color: theme("colors.text");
   border: none;
   border-radius: 0;
   width: 100vw;

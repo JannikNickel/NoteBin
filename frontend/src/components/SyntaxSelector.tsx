@@ -16,7 +16,7 @@ const SyntaxSelector: React.FC<SyntaxSelectorProps> = ({ className, selectedLang
     >
         {languages.map((lang) => (
             <option key={lang.id} value={lang.id}>
-                {lang.display}
+                {lang.display.toUpperCase()}
             </option>
         ))};
     </select>

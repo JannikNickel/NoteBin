@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 body {
-  background-color: theme("colors.background-color");
-  color: theme("colors.text-color");
+  background-color: theme("colors.background");
+  color: theme("colors.text");
   height: 100vh;
   width: 100vw;
   margin: 0;
@@ -19,4 +19,30 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
+}
+
+.primary {
+  color: theme("colors.primary.text");
+  background-color: theme("colors.primary.default");
+}
+
+.primary:hover {
+  background-color: theme("colors.primary.hover");
+}
+
+.primary:active {
+  background-color: theme("colors.primary.active");
+}
+
+.secondary {
+  color: theme("colors.secondary.text");
+  background-color: theme("colors.secondary.default");
+}
+
+.secondary:hover {
+  background-color: theme("colors.secondary.hover");
+}
+
+.secondary:active {
+  background-color: theme("colors.secondary.active");
 }

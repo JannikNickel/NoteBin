@@ -4,7 +4,7 @@ import { ToastContainer as TContainer, Bounce } from "react-toastify";
 const ToastContainer: React.FC = () => (
     <TContainer
         className="toast-container"
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
         closeOnClick={true}

@@ -48,17 +48,19 @@ const UploadPage: React.FC = () => {
                     className="text-area"
                     placeholder="..." />
             </div>
-            <button
-                className="flex fixed justify-center items-center text-4xl w-12 h-12 bottom-6 right-6 bg-primary-color rounded-lg"
-                onClick={handleSubmit}
-                disabled={submitting}>
-                    +
-            </button>
-            <SyntaxSelector
-                className="syntax-dropdown fixed bottom-6 right-20 rounded-lg"
-                selectedLanguage={language}
-                languages={languages}
-                onChange={handleSyntaxChange} />
+            <div className="toolbar">
+                <button
+                    className="toolbar-element primary"
+                    onClick={handleSubmit}
+                    disabled={submitting}>
+                        CREATE
+                </button>
+                <SyntaxSelector
+                    className="toolbar-element secondary"
+                    selectedLanguage={language}
+                    languages={languages}
+                    onChange={handleSyntaxChange} />
+            </div>
             <ToastContainer />
         </>
     )
