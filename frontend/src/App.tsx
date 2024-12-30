@@ -10,7 +10,8 @@ const App: React.FC = () => {
             <Routes>
                 <Route path="/" element={<UploadPage />} />
                 <Route path="/note/:id" element={<NotePage />} />
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage isSignup={false} />} />
+                <Route path="/signup" element={<LoginPage isSignup={true} />} />
             </Routes>
         </Router>
     )
