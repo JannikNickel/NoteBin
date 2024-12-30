@@ -1,5 +1,5 @@
 import "../css/upload.css";
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CodeEditor, { CodeEditorRef } from "../components/CodeEditor";
 import SyntaxSelector from "../components/SyntaxSelector";
@@ -54,7 +54,7 @@ const UploadPage: React.FC = () => {
     };
 
     const handleAccount = (): void => {
-        navigate("/account");
+        navigate("/login");
     };
 
     return (

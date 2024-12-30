@@ -1,6 +1,6 @@
 import "../css/note.css";
 import "../css/syntax.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import hljs from "highlight.js/lib/core";
 import hljsLangImportMap from "virtual:hljs-lang-import-map";
