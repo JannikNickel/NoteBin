@@ -37,6 +37,6 @@ namespace NoteBin.Services
             return true;
         }
 
-        private string GetPath(string id) => Path.Combine(directory, $"{id}.{fileExtension}");
+        private string GetPath(string id) => Path.Combine(directory, $"{id}{fileExtension}");
     }
 }
