@@ -1,6 +1,7 @@
 import "../css/login.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 interface LoginPageProps {
     isSignup: boolean;
@@ -10,6 +11,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -38,13 +40,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
                     </div>
                     <div className="form-group">
                         <label className="select-none" htmlFor="password">PASSWORD:</label>
-                        <input
-                            className="secondary"
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required />
+                        <div className="relative">
+                            <input
+                                className="secondary"
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required />
+                            <button
+                                type="button"
+                                className="secondary absolute right-3 top-[20%]"
+                                onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <EyeIcon className="h-5 w-5" /> : <EyeSlashIcon className="h-5 w-5" />}
+                            </button>
+                        </div>
                     </div>
                     {isSignup && password && (
                         <div className="form-group">
@@ -59,7 +69,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
                         </div>
                     )}
                     <div className="form-group">
-                        <button className="primary" type="submit">{isSignup ? "CREATE ACCOUNT" : "LOGIN"}</button>
+                        <button className="form-group-button primary" type="submit">{isSignup ? "CREATE ACCOUNT" : "LOGIN"}</button>
                     </div>
                     <div className="separator" />
                     <button

@@ -15,7 +15,7 @@
 }
 
 .form-group input,
-.form-group button {
+.form-group-button {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid #444;
