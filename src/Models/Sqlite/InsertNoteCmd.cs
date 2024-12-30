@@ -10,6 +10,6 @@ namespace NoteBin.Models.Sqlite
 
         }
 
-        private static object[] GetColumnBindings(Note note) => [note.Id, TimeUtils.ToUnixTimeMilliseconds(note.CreationDate), note.Syntax];
+        private static object[] GetColumnBindings(Note note) => [note.Id, note.Name, TimeUtils.ToUnixTimeMilliseconds(note.CreationDate), note.Syntax];
     }
 }

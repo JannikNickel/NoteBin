@@ -22,9 +22,10 @@ namespace NoteBin.Models.Sqlite
 
         protected override Note ParseDataRow(DbDataReader reader)
         {
-            long creationTime = reader.GetInt64(1);
-            string syntax = reader.GetString(2);
-            return new Note(id, TimeUtils.FromUnixTimeMilliseconds(creationTime), syntax);
+            string name = reader.GetString(1);
+            long creationTime = reader.GetInt64(2);
+            string syntax = reader.GetString(3);
+            return new Note(id, name, TimeUtils.FromUnixTimeMilliseconds(creationTime), syntax);
         }
     }
 }

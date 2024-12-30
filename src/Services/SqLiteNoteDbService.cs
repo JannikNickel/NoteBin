@@ -68,7 +68,7 @@ namespace NoteBin.Services
 
         public async Task<Note?> SaveNote(NoteCreateDto createDto)
         {
-            if(createDto.Syntax == null || createDto.Content == null)
+            if(createDto.Name == null || createDto.Syntax == null || createDto.Content == null)
             {
                 return null;
             }
@@ -79,7 +79,7 @@ namespace NoteBin.Services
             while(!inserted && attempts++ < insertAttemptLimit)
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, DateTime.Now, createDto.Syntax);
+                note = new Note(id, createDto.Name, DateTime.Now, createDto.Syntax);
 
                 using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                 using InsertNoteCmd insertCmd = new InsertNoteCmd(connection, note);

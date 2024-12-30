@@ -26,3 +26,9 @@
   border-radius: 0.5rem;
   font-size: 1rem;
 }
+
+.toolbar-element:active,
+.toolbar-element:hover,
+.toolbar-element:focus {
+  outline: none;
+}

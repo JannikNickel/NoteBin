@@ -40,9 +40,11 @@ body {
 }
 
 .secondary:hover {
+  color: theme("colors.primary.text");
   background-color: theme("colors.secondary.hover");
 }
 
 .secondary:active {
+  color: theme("colors.primary.text");
   background-color: theme("colors.secondary.active");
 }

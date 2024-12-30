@@ -9,11 +9,12 @@ namespace NoteBin.Models.Sqlite
     {
         public const string TableName = "notes";
         public const string IdColumn = "id";
+        public const string NameColumn = "name";
         public const string CreationTimeColumn = "creation_time";
         public const string SyntaxColumn = "syntax";
         public const string CreationTimeIndex = "idx_creation_time";
 
-        public static string[] Columns => [IdColumn, CreationTimeColumn, SyntaxColumn];
+        public static string[] Columns => [IdColumn, NameColumn, CreationTimeColumn, SyntaxColumn];
 
         public CreateNoteTableCmd(SQLiteConnection connection) : base(connection, TableName)
         {
@@ -23,6 +24,7 @@ namespace NoteBin.Models.Sqlite
         protected override IEnumerable<string> GenerateColumns()
         {
             yield return $"{IdColumn} TEXT PRIMARY KEY";
+            yield return $"{NameColumn} TEXT NOT NULL";
             yield return $"{CreationTimeColumn} INTEGER NOT NULL";
             yield return $"{SyntaxColumn} TEXT NOT NULL";
         }

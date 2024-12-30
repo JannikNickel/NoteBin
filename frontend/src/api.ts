@@ -2,6 +2,7 @@ import { Err, Ok, Result } from "./utils/result";
 import { getReasonPhrase } from "http-status-codes";
 
 export interface NoteCreateRequest {
+    name: string,
     syntax: string,
     content: string
 }

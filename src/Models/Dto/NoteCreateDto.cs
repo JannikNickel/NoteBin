@@ -4,11 +4,15 @@ namespace NoteBin.Models.Dto
 {
     public class NoteCreateDto
     {
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Syntax is required!")]
-        [StringLength(32, ErrorMessage = "Syntax must not exceed 32 characters")]
+        [Required(AllowEmptyStrings = true, ErrorMessage = $"{nameof(Name)} is required!")]
+        [StringLength(64, ErrorMessage = $"{nameof(Name)} must not exceed 64 characters")]
+        public string? Name { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = $"{nameof(Syntax)} is required!")]
+        [StringLength(32, ErrorMessage = $"{nameof(Syntax)} must not exceed 32 characters")]
         public string? Syntax { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Content is required!")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = $"{nameof(Content)} is required!")]
         public string? Content { get; set; }
     }
 }
