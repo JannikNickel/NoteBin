@@ -30,6 +30,12 @@ const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placehol
         }
     };
 
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+        if (onChange) {
+            onChange(e.target.value);
+        }
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
         if (editorRef.current) {
             let codeEditor: HTMLTextAreaElement = editorRef.current;
@@ -63,9 +69,19 @@ const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placehol
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-        if (onChange) {
-            onChange(e.target.value);
+    const handleDrop = (e: React.DragEvent<HTMLTextAreaElement>): void => {
+        e.preventDefault();
+        const files = Array.from(e.dataTransfer.files);
+        const file = files.filter(file => ["text/plain", "application/json"].includes(file.type))[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event: ProgressEvent<FileReader>) => {
+                const text = event.target?.result as string;
+                if (text) {
+                    setValue(text);
+                }
+            };
+            reader.readAsText(file);
         }
     };
 
@@ -76,7 +92,9 @@ const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placehol
             placeholder={placeholder}
             value={value}
             onChange={handleChange}
-            onKeyDown={handleKeyDown} />
+            onKeyDown={handleKeyDown}
+            onDrop={handleDrop}
+            onDragOver={e => e.preventDefault()} />
     );
 });
 
