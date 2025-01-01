@@ -14,11 +14,6 @@ namespace NoteBin.Services
 
         public Task<User?> CreateUser(UserRequest request)
         {
-            if(request.Username == null || request.Password == null)
-            {
-                return Task.FromResult<User?>(null);
-            }
-
             string hashedPassword = passwordHasher.HashPassword(request.Username, request.Password);
             User user = new User(request.Username, hashedPassword, DateTime.UtcNow);
             return Task.FromResult(users.TryAdd(user.Name, user) ? user : null);

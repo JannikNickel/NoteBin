@@ -27,10 +27,10 @@ namespace NoteBin.API
                 return BadRequest(ModelState);
             }
 
-            User? user = await userService.GetUser(request.Username ?? "");
+            User? user = await userService.GetUser(request.Username);
             if(user != null)
             {
-                bool valid = userService.VerifyUser(user, request.Password ?? "");
+                bool valid = userService.VerifyUser(user, request.Password);
                 if(valid)
                 {
                     string token = await authService.GenerateToken(user);

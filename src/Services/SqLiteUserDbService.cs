@@ -32,11 +32,6 @@ namespace NoteBin.Services
 
         public async Task<User?> CreateUser(UserRequest request)
         {
-            if(request.Username == null || request.Password == null)
-            {
-                return null;
-            }
-
             string hashedPassword = passwordHasher.HashPassword(request.Username, request.Password);
             User user = new User(request.Username, hashedPassword, DateTime.UtcNow);
 

@@ -32,22 +32,17 @@ namespace NoteBin.Services
             return null;
         }
 
-        public async Task<Note?> SaveNote(NoteCreateRequest createDto, User? owner)
+        public async Task<Note?> SaveNote(NoteCreateRequest request, User? owner)
         {
-            if(createDto.Name == null || createDto.Syntax == null || createDto.Content == null)
-            {
-                return null;
-            }
-
             Note note;
             do
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, createDto.Name, owner?.Name, DateTime.UtcNow, createDto.Syntax);
+                note = new Note(id, request.Name, owner?.Name, DateTime.UtcNow, request.Syntax);
             }
             while(!notes.TryAdd(note.Id, note));
 
-            bool savedContent = await contentService.SaveContent(note.Id, createDto.Content);
+            bool savedContent = await contentService.SaveContent(note.Id, request.Content);
             if(!savedContent)
             {
                 notes.TryRemove(note.Id, out _);

@@ -54,20 +54,15 @@ namespace NoteBin.Services
             return null;
         }
 
-        public async Task<Note?> SaveNote(NoteCreateRequest createDto, User? owner)
+        public async Task<Note?> SaveNote(NoteCreateRequest request, User? owner)
         {
-            if(createDto.Name == null || createDto.Syntax == null || createDto.Content == null)
-            {
-                return null;
-            }
-
             Note? note = null;
             bool inserted = false;
             int attempts = 0;
             while(!inserted && attempts++ < insertAttemptLimit)
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, createDto.Name, owner?.Name, DateTime.UtcNow, createDto.Syntax);
+                note = new Note(id, request.Name, owner?.Name, DateTime.UtcNow, request.Syntax);
 
                 using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                 using InsertNoteCmd insertCmd = new InsertNoteCmd(connection, note);
@@ -81,7 +76,7 @@ namespace NoteBin.Services
 
             if(inserted && note != null)
             {
-                bool savedContent = await contentService.SaveContent(note.Id, createDto.Content);
+                bool savedContent = await contentService.SaveContent(note.Id, request.Content);
                 if(!savedContent)
                 {
                     using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
