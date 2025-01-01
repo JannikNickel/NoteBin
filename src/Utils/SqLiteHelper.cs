@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +28,19 @@ namespace NoteBin
             SQLiteConnection conn = new SQLiteConnection(connStr);
             await conn.OpenAsync();
             return conn;
+        }
+
+        public static void EnsureDataDirectory(string connectionString)
+        {
+            string? dataSource = FindDataSource(connectionString);
+            if(dataSource != null)
+            {
+                string? directory = Path.GetDirectoryName(dataSource);
+                if(directory != null)
+                {
+                    Directory.CreateDirectory(directory);
+                }
+            }
         }
 
         public static IEnumerable<(string key, string value)> ReadConnectionString(string connStr)

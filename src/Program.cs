@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NoteBin.Configuration;
+using NoteBin.Services;
 using System.IO;
 
 namespace NoteBin
@@ -35,12 +36,16 @@ namespace NoteBin
         private static void ConfigureService(IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddNoteStorageServices(configuration);
+            services.AddUserStorageServices(configuration);
+            services.AddAuthServices(configuration);
             services.AddControllers();
         }
 
         private static void ValidateConfiguration(WebApplication app)
         {
             NoteStorageConfiguration.Initialize(app);
+            UserStorageConfiguration.Initialize(app);
+            AuthConfiguration.Initialize(app);
         }
 
         private static void ConfigureMiddleware(WebApplication app)

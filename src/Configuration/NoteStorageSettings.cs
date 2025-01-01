@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NoteBin.Configuration
 {
-    public record NoteStorageSettings : IValidatableObject
+    public record NoteStorageSettings : ISettingsObject
     {
         public static string SectionName => "NoteStorage";
 

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NoteBin.Models;
-using NoteBin.Models.Dto;
+using NoteBin.Models.API;
 using NoteBin.Services;
 using System.Threading.Tasks;
 
@@ -19,14 +19,14 @@ namespace NoteBin.API
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNote([FromBody] NoteCreateDto? createDto)
+        public async Task<IActionResult> CreateNote([FromBody] NoteCreateRequest? request)
         {
-            if(!ModelState.IsValid || createDto == null)
+            if(!ModelState.IsValid || request == null)
             {
                 return BadRequest(ModelState);
             }
 
-            Note? res = await dbService.SaveNote(createDto);
+            Note? res = await dbService.SaveNote(request);
             return res != null ? Ok(new { res.Id }) : StatusCode(StatusCodes.Status500InternalServerError);
         }
 

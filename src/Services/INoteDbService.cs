@@ -1,5 +1,5 @@
 using NoteBin.Models;
-using NoteBin.Models.Dto;
+using NoteBin.Models.API;
 using System.Threading.Tasks;
 
 namespace NoteBin.Services
@@ -7,6 +7,6 @@ namespace NoteBin.Services
     public interface INoteDbService
     {
         Task<Note?> GetNote(string id);
-        Task<Note?> SaveNote(NoteCreateDto note);
+        Task<Note?> SaveNote(NoteCreateRequest note);
     }
 }

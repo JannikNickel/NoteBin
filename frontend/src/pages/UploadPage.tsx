@@ -4,15 +4,17 @@ import { useNavigate } from "react-router-dom";
 import CodeEditor, { CodeEditorRef } from "../components/CodeEditor";
 import SyntaxSelector from "../components/SyntaxSelector";
 import ToastContainer from "../components/ToastContainer";
-import showErrorToast from "../utils/toast-utils";
+import { showErrorToast } from "../utils/toast-utils";
 import { ProgrammingLanguage, languages } from "../language";
 import { apiRequest, NoteCreateRequest, NoteCreateResponse } from "../api";
+import { getUser } from "../utils/storage";
 
 const UploadPage: React.FC = () => {
     const [language, setLanguage] = useState<ProgrammingLanguage>(languages[0]);
     const [title, setTitle] = useState<string>("");
     const [titleInputFocused, setTitleInputFocused] = useState<boolean>(false);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     const codeEditorRef = useRef<CodeEditorRef>(null);
     const titleInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
@@ -22,6 +24,18 @@ const UploadPage: React.FC = () => {
             titleInputRef.current.style.width = `${titleInputRef.current.value.length + 5}ch`;
         }
     }, [title]);
+
+    useEffect(() => {
+        const validateUser = async () => {
+            try {
+                const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
+                setIsAuthenticated(response.ok);
+            } catch {
+                setIsAuthenticated(false);
+            }
+        };
+        validateUser();
+    }, []);
 
     const handleSyntaxChange = (e: ChangeEvent<HTMLSelectElement>): void => {
         let lang = languages.find(lang => lang.id === e.target.value) as ProgrammingLanguage;
@@ -33,7 +47,7 @@ const UploadPage: React.FC = () => {
     };
 
     const handleSubmit = async (): Promise<void> => {
-        if (submitting) {
+        if (submitting || isAuthenticated === null) {
             return;
         }
 
@@ -46,7 +60,7 @@ const UploadPage: React.FC = () => {
             if (response.ok) {
                 navigate(`/note/${response.value.id}`);
             } else {
-                showErrorToast(response.error);
+                showErrorToast(response.error.message);
             }
         } finally {
             setSubmitting(false);
@@ -54,7 +68,11 @@ const UploadPage: React.FC = () => {
     };
 
     const handleAccount = (): void => {
-        navigate("/login");
+        if (isAuthenticated) {
+            navigate("/account");            
+        } else {
+            navigate("/login");
+        }
     };
 
     return (
@@ -69,7 +87,7 @@ const UploadPage: React.FC = () => {
                 <button
                     className="toolbar-element primary"
                     onClick={handleSubmit}
-                    disabled={submitting}>
+                    disabled={submitting || isAuthenticated === null}>
                         CREATE
                 </button>
                 <SyntaxSelector
@@ -90,7 +108,7 @@ const UploadPage: React.FC = () => {
                     className="toolbar-element secondary"
                     onClick={handleAccount}
                     disabled={submitting}>
-                        [LOGIN]
+                        [{isAuthenticated && getUser() ? getUser() : "LOGIN"}]
                 </button>
             </div>
             <ToastContainer />

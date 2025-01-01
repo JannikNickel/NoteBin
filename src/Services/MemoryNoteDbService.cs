@@ -1,5 +1,5 @@
 using NoteBin.Models;
-using NoteBin.Models.Dto;
+using NoteBin.Models.API;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ namespace NoteBin.Services
             return null;
         }
 
-        public async Task<Note?> SaveNote(NoteCreateDto createDto)
+        public async Task<Note?> SaveNote(NoteCreateRequest createDto)
         {
             if(createDto.Name == null || createDto.Syntax == null || createDto.Content == null)
             {
@@ -43,7 +43,7 @@ namespace NoteBin.Services
             do
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, createDto.Name, DateTime.Now, createDto.Syntax);
+                note = new Note(id, createDto.Name, DateTime.UtcNow, createDto.Syntax);
             }
             while(!notes.TryAdd(note.Id, note));
 

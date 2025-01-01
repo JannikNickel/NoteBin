@@ -38,7 +38,7 @@ const NotePage: React.FC = () => {
                 setNote(response.value);
                 setLoading(false);
             } else {
-                setError(response.error);
+                setError(response.error.message);
                 setLoading(false);
             }
         };

@@ -1,5 +1,5 @@
 using NoteBin.Models;
-using NoteBin.Models.Dto;
+using NoteBin.Models.API;
 using NoteBin.Models.Sqlite;
 using System;
 using System.Data.SQLite;
@@ -18,10 +18,7 @@ namespace NoteBin.Services
 
         public SqLiteNoteDbService(INoteIdGenService idGenService, INoteContentService contentService, string? connectionString)
         {
-            if(string.IsNullOrEmpty(connectionString))
-            {
-                throw new InvalidOperationException($"Invalid connectionString ({connectionString})!");
-            }
+            ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
             this.idGenService = idGenService;
             this.contentService = contentService;
@@ -32,15 +29,7 @@ namespace NoteBin.Services
 
         private void Initialize()
         {
-            string? dataSource = SqLiteHelper.FindDataSource(connectionString);
-            if(dataSource != null)
-            {
-                string? directory = Path.GetDirectoryName(dataSource);
-                if(directory != null)
-                {
-                    Directory.CreateDirectory(directory);
-                }
-            }
+            SqLiteHelper.EnsureDataDirectory(connectionString);
 
             using SQLiteConnection connection = SqLiteHelper.Open(connectionString);
             using CreateNoteTableCmd createCmd = new CreateNoteTableCmd(connection);
@@ -66,7 +55,7 @@ namespace NoteBin.Services
             return null;
         }
 
-        public async Task<Note?> SaveNote(NoteCreateDto createDto)
+        public async Task<Note?> SaveNote(NoteCreateRequest createDto)
         {
             if(createDto.Name == null || createDto.Syntax == null || createDto.Content == null)
             {
@@ -79,7 +68,7 @@ namespace NoteBin.Services
             while(!inserted && attempts++ < insertAttemptLimit)
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, createDto.Name, DateTime.Now, createDto.Syntax);
+                note = new Note(id, createDto.Name, DateTime.UtcNow, createDto.Syntax);
 
                 using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                 using InsertNoteCmd insertCmd = new InsertNoteCmd(connection, note);

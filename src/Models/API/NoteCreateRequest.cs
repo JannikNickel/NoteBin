@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NoteBin.Models.Dto
+namespace NoteBin.Models.API
 {
-    public class NoteCreateDto
+    public class NoteCreateRequest
     {
         [Required(AllowEmptyStrings = true, ErrorMessage = $"{nameof(Name)} is required!")]
         [StringLength(64, ErrorMessage = $"{nameof(Name)} must not exceed 64 characters")]

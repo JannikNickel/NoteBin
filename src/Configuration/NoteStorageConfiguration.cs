@@ -11,15 +11,7 @@ namespace NoteBin.Configuration
     {
         public static IServiceCollection AddNoteStorageServices(this IServiceCollection services, ConfigurationManager configuration)
         {
-            if(!configuration.GetSection(NoteStorageSettings.SectionName).Exists())
-            {
-                throw new InvalidOperationException($"Configuration section '{NoteStorageSettings.SectionName}' is missing!");
-            }
-
-            services.AddOptions<NoteStorageSettings>()
-                .BindConfiguration(NoteStorageSettings.SectionName)
-                .ValidateDataAnnotations()
-                .ValidateOnStart();
+            ConfigurationHelper.AddValidatedSettings<NoteStorageSettings>(services, configuration);
 
             services.AddSingleton<INoteIdGenService, UuidNoteIdGenService>();
             services.AddSingleton<INoteContentService>((IServiceProvider provider) =>
@@ -42,7 +34,7 @@ namespace NoteBin.Configuration
                 {
                     NoteStorageType.Memory => new MemoryNoteDbService(idGenService, contentService),
                     NoteStorageType.SQLite => new SqLiteNoteDbService(idGenService, contentService, settings.ConnectionString),
-                    _ => throw new NotSupportedException($"NoteStorageType '{settings.StorageType}' is not supported!")
+                    _ => throw new NotSupportedException($"{nameof(NoteStorageType)} '{settings.StorageType}' is not supported!")
                 };
             });
             return services;
