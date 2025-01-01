@@ -12,10 +12,12 @@ namespace NoteBin.API
     public class NoteController : ControllerBase
     {
         private readonly INoteDbService dbService;
+        private readonly IAuthService authService;
 
-        public NoteController(INoteDbService dbService)
+        public NoteController(INoteDbService dbService, IAuthService authService)
         {
             this.dbService = dbService;
+            this.authService = authService;
         }
 
         [HttpPost]
@@ -26,7 +28,10 @@ namespace NoteBin.API
                 return BadRequest(ModelState);
             }
 
-            Note? res = await dbService.SaveNote(request);
+            string? token = AuthHelper.ReadBearerToken(Request);
+            User? owner = token != null ? await authService.ValidateToken(token) : null;
+
+            Note? res = await dbService.SaveNote(request, owner);
             return res != null ? Ok(new { res.Id }) : StatusCode(StatusCodes.Status500InternalServerError);
         }
 

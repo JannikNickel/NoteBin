@@ -7,6 +7,6 @@ namespace NoteBin.Services
     public interface INoteDbService
     {
         Task<Note?> GetNote(string id);
-        Task<Note?> SaveNote(NoteCreateRequest note);
+        Task<Note?> SaveNote(NoteCreateRequest note, User? owner);
     }
 }

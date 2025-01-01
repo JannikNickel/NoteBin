@@ -13,6 +13,8 @@ export interface NoteCreateResponse {
 }
 
 export interface Note {
+    name: string,
+    owner: string | null,
     syntax: string,
     content: string
 }
@@ -80,6 +82,6 @@ export async function apiRequest<TReq extends Object, TRes extends Object>(path:
         return Ok(result);
     } catch (err) {
         console.error("apiRequest<TReq, TRes> error: ", err);
-        return Err({ statusCode: null, message: "An unknown error occured!" } as RequestError);
+        return Err({ statusCode: null, message: "An unknown error occurred!" } as RequestError);
     }
 }

@@ -3,7 +3,6 @@ using NoteBin.Models.API;
 using NoteBin.Models.Sqlite;
 using System;
 using System.Data.SQLite;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace NoteBin.Services
@@ -55,7 +54,7 @@ namespace NoteBin.Services
             return null;
         }
 
-        public async Task<Note?> SaveNote(NoteCreateRequest createDto)
+        public async Task<Note?> SaveNote(NoteCreateRequest createDto, User? owner)
         {
             if(createDto.Name == null || createDto.Syntax == null || createDto.Content == null)
             {
@@ -68,7 +67,7 @@ namespace NoteBin.Services
             while(!inserted && attempts++ < insertAttemptLimit)
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, createDto.Name, DateTime.UtcNow, createDto.Syntax);
+                note = new Note(id, createDto.Name, owner?.Name, DateTime.UtcNow, createDto.Syntax);
 
                 using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                 using InsertNoteCmd insertCmd = new InsertNoteCmd(connection, note);

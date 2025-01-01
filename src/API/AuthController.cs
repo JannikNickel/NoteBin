@@ -43,13 +43,13 @@ namespace NoteBin.API
         [HttpGet]
         public async Task<IActionResult> Validate()
         {
-            string? token = AuthUtils.ReadBearerToken(Request);
+            string? token = AuthHelper.ReadBearerToken(Request);
             if(token == null)
             {
                 return BadRequest();
             }
 
-            bool valid = await authService.ValidateToken(token);
+            bool valid = await authService.ValidateToken(token) != null;
             return valid ? base.Ok() : base.Unauthorized();
         }
     }

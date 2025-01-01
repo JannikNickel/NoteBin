@@ -6,6 +6,6 @@ namespace NoteBin.Services
     public interface IAuthService
     {
         public Task<string> GenerateToken(User user);
-        public Task<bool> ValidateToken(string token);
+        public Task<User?> ValidateToken(string token);
     }
 }

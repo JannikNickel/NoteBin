@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,8 +36,9 @@ namespace NoteBin
 			return $"{encodedData}.{signature}";
         }
 
-		public bool Validate(string? token)
+		public bool Validate(string? token, [NotNullWhen(true)] out string? username)
 		{
+			username = null;
 			if(string.IsNullOrEmpty(token))
 			{
 				return false;
@@ -63,6 +65,7 @@ namespace NoteBin
 				return false;
 			}
 
+			username = payloadData[0];
 			long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 			return currentTime <= expirationTime;
 		}

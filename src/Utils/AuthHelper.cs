@@ -3,7 +3,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace NoteBin
 {
-    public static class AuthUtils
+    public static class AuthHelper
     {
         private const string bearerStart = "Bearer ";
 

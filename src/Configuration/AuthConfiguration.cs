@@ -16,9 +16,10 @@ namespace NoteBin.Configuration
             services.AddSingleton<IAuthService>((IServiceProvider provider) =>
             {
                 AuthSettings settings = provider.GetRequiredService<IOptions<AuthSettings>>().Value;
+                IUserDbService userService = provider.GetRequiredService<IUserDbService>();
                 return settings.AuthType switch
                 {
-                    AuthType.Stateless => new StatelessAuthService(settings),
+                    AuthType.Stateless => new StatelessAuthService(settings, userService),
                     _ => throw new NotSupportedException($"{nameof(AuthType)} '{settings.AuthType}' is not supported!")
                 };
             });

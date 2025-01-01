@@ -56,7 +56,7 @@ const UploadPage: React.FC = () => {
             const requestBody: NoteCreateRequest = { name: title, syntax: language.id, content: codeEditorRef.current?.value || "" };
             const response = await apiRequest<NoteCreateRequest, NoteCreateResponse>("/api/note", requestBody, {
                 method: "POST"
-            });
+            }, isAuthenticated !== null);
             if (response.ok) {
                 navigate(`/note/${response.value.id}`);
             } else {
@@ -104,7 +104,7 @@ const UploadPage: React.FC = () => {
                     onFocus={() => setTitleInputFocused(true)}
                     onBlur={() => setTitleInputFocused(false)}
                     onChange={handleTitleChange} />
-                <button 
+                <button
                     className="toolbar-element secondary"
                     onClick={handleAccount}
                     disabled={submitting}>

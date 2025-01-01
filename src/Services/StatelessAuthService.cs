@@ -10,8 +10,9 @@ namespace NoteBin.Services
     {
         private readonly StatelessTokenGen tokenGen;
         private readonly TimeSpan expirationTime;
+        private readonly IUserDbService userService;
 
-        public StatelessAuthService(AuthSettings settings)
+        public StatelessAuthService(AuthSettings settings, IUserDbService userService)
         {
             byte[]? key = File.Exists(settings.KeyFile) ? File.ReadAllBytes(settings.KeyFile) : null;
             if(key?.Length != settings.KeyLength)
@@ -21,6 +22,7 @@ namespace NoteBin.Services
             }
             tokenGen = new StatelessTokenGen(key, settings.TokenLength);
             expirationTime = TimeSpan.FromSeconds(settings.ExpirationDuration);
+            this.userService = userService;
         }
 
         public Task<string> GenerateToken(User user)
@@ -28,9 +30,13 @@ namespace NoteBin.Services
             return Task.FromResult(tokenGen.Generate(user.Name, expirationTime));
         }
 
-        public Task<bool> ValidateToken(string token)
+        public async Task<User?> ValidateToken(string token)
         {
-            return Task.FromResult(tokenGen.Validate(token));
+            if(tokenGen.Validate(token, out string? username))
+            {
+                return await userService.GetUser(username);
+            }
+            return null;
         }
     }
 }
