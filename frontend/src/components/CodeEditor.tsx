@@ -20,6 +20,9 @@ const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placehol
     useImperativeHandle(reference, (): CodeEditorRef => ({
         get value() {
             return editorRef.current?.value || "";
+        },
+        set value(value: string) {
+            setValue(value);
         }
     }));
 

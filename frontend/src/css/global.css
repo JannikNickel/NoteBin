@@ -27,11 +27,11 @@ body {
   background-color: theme("colors.primary.default");
 }
 
-.primary:hover {
+.primary:not(:disabled):hover {
   background-color: theme("colors.primary.hover");
 }
 
-.primary:active {
+.primary:not(:disabled):active {
   background-color: theme("colors.primary.active");
 }
 
@@ -40,12 +40,12 @@ body {
   background-color: theme("colors.secondary.default");
 }
 
-.secondary:hover {
+.secondary:not(:disabled):hover {
   color: theme("colors.primary.text");
   background-color: theme("colors.secondary.hover");
 }
 
-.secondary:active {
+.secondary:not(:disabled):active {
   color: theme("colors.primary.text");
   background-color: theme("colors.secondary.active");
 }

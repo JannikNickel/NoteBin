@@ -4,6 +4,7 @@ import { getAuthToken } from "./utils/storage";
 
 export interface NoteCreateRequest {
     name: string,
+    fork?: string,
     syntax: string,
     content: string
 }
@@ -14,7 +15,8 @@ export interface NoteCreateResponse {
 
 export interface Note {
     name: string,
-    owner: string | null,
+    owner?: string,
+    fork?: string,
     syntax: string,
     content: string
 }
@@ -29,7 +31,7 @@ export interface AuthResponse {
 }
 
 export interface RequestError {
-    statusCode: number | null,
+    statusCode?: number,
     message: string
 };
 
@@ -82,6 +84,6 @@ export async function apiRequest<TReq extends Object, TRes extends Object>(path:
         return Ok(result);
     } catch (err) {
         console.error("apiRequest<TReq, TRes> error: ", err);
-        return Err({ statusCode: null, message: "An unknown error occurred!" } as RequestError);
+        return Err({ message: "An unknown error occurred!" } as RequestError);
     }
 }

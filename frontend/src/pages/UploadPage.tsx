@@ -1,12 +1,13 @@
 import "../css/upload.css";
+import "../css/toolbar.css";
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import CodeEditor, { CodeEditorRef } from "../components/CodeEditor";
 import SyntaxSelector from "../components/SyntaxSelector";
 import ToastContainer from "../components/ToastContainer";
 import { showErrorToast } from "../utils/toast-utils";
 import { ProgrammingLanguage, languages } from "../language";
-import { apiRequest, NoteCreateRequest, NoteCreateResponse } from "../api";
+import { apiRequest, Note, NoteCreateRequest, NoteCreateResponse } from "../api";
 import { getUser } from "../utils/storage";
 
 const UploadPage: React.FC = () => {
@@ -15,27 +16,12 @@ const UploadPage: React.FC = () => {
     const [titleInputFocused, setTitleInputFocused] = useState<boolean>(false);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const [isLoadingFork, setIsLoadingFork] = useState<boolean>(false);
     const codeEditorRef = useRef<CodeEditorRef>(null);
     const titleInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
-    
-    useEffect(() => {
-        if (titleInputRef.current) {
-            titleInputRef.current.style.width = `${titleInputRef.current.value.length + 5}ch`;
-        }
-    }, [title]);
-
-    useEffect(() => {
-        const validateUser = async () => {
-            try {
-                const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
-                setIsAuthenticated(response.ok);
-            } catch {
-                setIsAuthenticated(false);
-            }
-        };
-        validateUser();
-    }, []);
+    const [searchParams] = useSearchParams();
+    const forkId = searchParams.get("fork");
 
     const handleSyntaxChange = (e: ChangeEvent<HTMLSelectElement>): void => {
         let lang = languages.find(lang => lang.id === e.target.value) as ProgrammingLanguage;
@@ -53,7 +39,12 @@ const UploadPage: React.FC = () => {
 
         setSubmitting(true);
         try {
-            const requestBody: NoteCreateRequest = { name: title, syntax: language.id, content: codeEditorRef.current?.value || "" };
+            const requestBody: NoteCreateRequest = {
+                name: title,
+                fork: forkId || undefined,
+                syntax: language.id,
+                content: codeEditorRef.current?.value || ""
+            };
             const response = await apiRequest<NoteCreateRequest, NoteCreateResponse>("/api/note", requestBody, {
                 method: "POST"
             }, isAuthenticated !== null);
@@ -69,11 +60,54 @@ const UploadPage: React.FC = () => {
 
     const handleAccount = (): void => {
         if (isAuthenticated) {
-            navigate("/account");            
+            navigate(`/user/${getUser()}`);
         } else {
             navigate("/login");
         }
     };
+
+    useEffect(() => {
+        const validateUser = async () => {
+            try {
+                const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
+                setIsAuthenticated(response.ok);
+            } catch {
+                setIsAuthenticated(false);
+            }
+        };
+        validateUser();
+    }, []);
+    
+    useEffect(() => {
+        if (titleInputRef.current) {
+            titleInputRef.current.style.width = `${titleInputRef.current.value.length + 5}ch`;
+        }
+    }, [title]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await apiRequest<{}, Note>(`/api/note/${forkId}`, {}, {
+                method: "GET"
+            });
+            if (response.ok) {
+                const note = response.value;
+                setTitle(note.name);
+                setLanguage(languages.find(lang => lang.id === note.syntax) || languages[0]);
+                if (codeEditorRef.current) {
+                    codeEditorRef.current.value = note.content;
+                }
+            }
+            setIsLoadingFork(false);
+        };
+
+        if (forkId) {
+            fetchData();
+        }
+    }, [forkId]);
+
+    if (forkId && isLoadingFork) {
+        return <p className="p-2">Loading...</p>
+    }
 
     return (
         <>
@@ -97,7 +131,7 @@ const UploadPage: React.FC = () => {
                     onChange={handleSyntaxChange} />
                 <input
                     ref={titleInputRef}
-                    className="toolbar-element secondary text-center min-w-36 max-w-72"
+                    className="toolbar-element secondary text-center min-w-36 max-w-80"
                     value={title}
                     maxLength={64}
                     placeholder={!titleInputFocused ? "[UNTITLED]" : ""}

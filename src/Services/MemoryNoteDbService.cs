@@ -38,7 +38,7 @@ namespace NoteBin.Services
             do
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, request.Name, owner?.Name, DateTime.UtcNow, request.Syntax);
+                note = new Note(id, request.Name, owner?.Name, request.Fork, DateTime.UtcNow, request.Syntax);
             }
             while(!notes.TryAdd(note.Id, note));
 

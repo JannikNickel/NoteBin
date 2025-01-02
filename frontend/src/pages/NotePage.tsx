@@ -1,7 +1,8 @@
 import "../css/note.css";
 import "../css/syntax.css";
+import "../css/toolbar.css";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import hljs from "highlight.js/lib/core";
 import hljsLangImportMap from "virtual:hljs-lang-import-map";
 import { apiRequest, Note } from "../api";
@@ -12,6 +13,7 @@ const NotePage: React.FC = () => {
     const [note, setNote] = useState<Note | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const loadAllLanguages = async () => {
         const languagePromises = languages.map(async (lang: ProgrammingLanguage) => {
@@ -19,11 +21,33 @@ const NotePage: React.FC = () => {
         });
         await Promise.all(languagePromises);
     };
+
     const loadLanguage = async (id: string) => {
         if (id !== "auto" && !hljs.getLanguage(id)) {
             const langModule = await hljsLangImportMap[id]();
             hljs.registerLanguage(id, langModule.default);
         }
+    };
+
+    const handleCreateFork = () => {
+        navigate(`/?fork=${id}`);
+    };
+
+    const handleOwnerClick = () => {
+        if (note?.owner) {
+            navigate(`/user/${note.owner}`);
+        }
+    };
+
+    const handleForkClick = () => {
+        if (note?.fork) {
+            navigate(`/note/${note.fork}`);
+        }
+    };
+
+    const getSyntaxDisplayName = (syntax: string) => {
+        const language = languages.find(lang => lang.id === syntax);
+        return language?.display.toUpperCase() || syntax.toUpperCase();
     };
 
     useEffect(() => {
@@ -78,6 +102,29 @@ const NotePage: React.FC = () => {
                     <pre>
                         <code className={language}>{note?.content}</code>
                     </pre>
+                </div>
+                <div className="toolbar">
+                    <button
+                        className="toolbar-element primary"
+                        onClick={handleCreateFork}>
+                            FORK
+                    </button>
+                    <button
+                        className="toolbar-element secondary"
+                        onClick={handleOwnerClick}
+                        disabled={!note?.owner}>
+                            {note?.owner ? `OWNER: [${note.owner}]` : "[UNOWNED]"}
+                    </button>
+                    {note?.fork && 
+                        <button
+                            className="toolbar-element secondary"
+                            onClick={handleForkClick}>
+                                {`FORKED FROM: [${note.fork}]`}
+                        </button>
+                    }
+                    <div className="toolbar-element secondary pointer-events-none">
+                        {note?.syntax && getSyntaxDisplayName(note?.syntax)}
+                    </div>
                 </div>
             </div>
         </>

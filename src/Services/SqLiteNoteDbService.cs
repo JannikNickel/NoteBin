@@ -62,7 +62,7 @@ namespace NoteBin.Services
             while(!inserted && attempts++ < insertAttemptLimit)
             {
                 string id = idGenService.GenerateId();
-                note = new Note(id, request.Name, owner?.Name, DateTime.UtcNow, request.Syntax);
+                note = new Note(id, request.Name, owner?.Name, request.Fork, DateTime.UtcNow, request.Syntax);
 
                 using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                 using InsertNoteCmd insertCmd = new InsertNoteCmd(connection, note);

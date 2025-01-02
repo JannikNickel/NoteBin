@@ -24,9 +24,10 @@ namespace NoteBin.Models.Sqlite
         {
             string name = reader.GetString(1);
             string? owner = reader.GetValue(2) as string;
-            long creationTime = reader.GetInt64(3);
-            string syntax = reader.GetString(4);
-            return new Note(id, name, owner, TimeUtils.FromUnixTimeMilliseconds(creationTime), syntax);
+            string? fork = reader.GetValue(3) as string;
+            long creationTime = reader.GetInt64(4);
+            string syntax = reader.GetString(5);
+            return new Note(id, name, owner, fork, TimeUtils.FromUnixTimeMilliseconds(creationTime), syntax);
         }
     }
 }
