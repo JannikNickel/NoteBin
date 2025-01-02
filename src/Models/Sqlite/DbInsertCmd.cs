@@ -20,7 +20,5 @@ namespace NoteBin.Models.Sqlite
                 cmd.Parameters.AddWithValue(id, binding);
             }
         }
-
-        public Task ExecuteAsync() => cmd.ExecuteNonQueryAsync();
     }
 }

@@ -66,12 +66,7 @@ namespace NoteBin.Services
 
                 using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                 using InsertNoteCmd insertCmd = new InsertNoteCmd(connection, note);
-                try
-                {
-                    await insertCmd.ExecuteAsync();
-                    inserted = true;
-                }
-                catch(SQLiteException ex) when(ex.ErrorCode == (int)SQLiteErrorCode.Constraint) { }
+                inserted = await insertCmd.ExecuteAsync() == SQLiteErrorCode.Ok;
             }
 
             if(inserted && note != null)

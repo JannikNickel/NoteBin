@@ -30,23 +30,28 @@ namespace NoteBin.Services
             createCmd.Execute();
         }
 
-        public async Task<User?> CreateUser(UserRequest request)
+        public async Task<UserCreationResult> CreateUser(UserRequest request)
         {
+            if(!UserHelper.ValidateUsername(request.Username))
+            {
+                return UserCreationResult.Err(UserCreationError.InvalidUsername);
+            }
+            if(!UserHelper.ValidatePassword(request.Password))
+            {
+                return UserCreationResult.Err(UserCreationError.InvalidPassword);
+            }
+
             string hashedPassword = passwordHasher.HashPassword(request.Username, request.Password);
             User user = new User(request.Username, hashedPassword, DateTime.UtcNow);
 
             using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
             using InsertUserCmd insertCmd = new InsertUserCmd(connection, user);
-            try
+            return await insertCmd.ExecuteAsync() switch
             {
-                await insertCmd.ExecuteAsync();
-            }
-            catch(SQLiteException ex) when(ex.ErrorCode == (int)SQLiteErrorCode.Constraint)
-            {
-                return null;
-            }
-
-            return user;
+                SQLiteErrorCode.Ok => UserCreationResult.Ok(user),
+                SQLiteErrorCode.Constraint => UserCreationResult.Err(UserCreationError.DuplicateUsername),
+                _ => UserCreationResult.Err(UserCreationError.Unknown)
+            };
         }
 
         public async Task<User?> GetUser(string name)

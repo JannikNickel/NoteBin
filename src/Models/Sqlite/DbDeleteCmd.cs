@@ -17,7 +17,5 @@ namespace NoteBin.Models.Sqlite
         }
 
         protected abstract string BuildFilter();
-
-        public Task ExecuteAsync() => cmd.ExecuteNonQueryAsync();
     }
 }

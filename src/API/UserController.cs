@@ -25,8 +25,14 @@ namespace NoteBin.API
                 return BadRequest(ModelState);
             }
 
-            User? res = await dbService.CreateUser(request);
-            return res != null ? Ok() : ErrorResponse.UsernameDuplicate;
+            UserCreationResult res = await dbService.CreateUser(request);
+            return res.IsOk ? Ok() : res.Error switch
+            {
+                UserCreationError.InvalidUsername => ErrorResponse.InvalidUsername,
+                UserCreationError.InvalidPassword => ErrorResponse.InvalidPassword,
+                UserCreationError.DuplicateUsername => ErrorResponse.DuplicateUsername,
+                _ => ErrorResponse.InternalError
+            };
         }
     }
 }

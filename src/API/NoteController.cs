@@ -32,7 +32,7 @@ namespace NoteBin.API
             User? owner = token != null ? await authService.ValidateToken(token) : null;
 
             Note? res = await dbService.SaveNote(request, owner);
-            return res != null ? Ok(new { res.Id }) : StatusCode(StatusCodes.Status500InternalServerError);
+            return res != null ? Ok(new { res.Id }) : ErrorResponse.InternalError;
         }
 
         [HttpGet("{id}")]

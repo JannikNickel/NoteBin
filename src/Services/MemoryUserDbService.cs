@@ -12,11 +12,20 @@ namespace NoteBin.Services
         private readonly PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
         private readonly ConcurrentDictionary<string, User> users = new ConcurrentDictionary<string, User>();
 
-        public Task<User?> CreateUser(UserRequest request)
+        public Task<UserCreationResult> CreateUser(UserRequest request)
         {
+            if(!UserHelper.ValidateUsername(request.Username))
+            {
+                return Task.FromResult(UserCreationResult.Err(UserCreationError.InvalidUsername));
+            }
+            if(!UserHelper.ValidatePassword(request.Password))
+            {
+                return Task.FromResult(UserCreationResult.Err(UserCreationError.InvalidPassword));
+            }
+
             string hashedPassword = passwordHasher.HashPassword(request.Username, request.Password);
             User user = new User(request.Username, hashedPassword, DateTime.UtcNow);
-            return Task.FromResult(users.TryAdd(user.Name, user) ? user : null);
+            return Task.FromResult(users.TryAdd(user.Name, user) ? UserCreationResult.Ok(user) : UserCreationResult.Err(UserCreationError.DuplicateUsername));
         }
 
         public Task<User?> GetUser(string name)
