@@ -30,7 +30,7 @@ namespace NoteBin.Services
             createCmd.Execute();
         }
 
-        public async Task<UserCreationResult> CreateUser(UserRequest request)
+        public async Task<UserCreationResult> CreateUser(AuthRequest request)
         {
             if(!UserHelper.ValidateUsername(request.Username))
             {

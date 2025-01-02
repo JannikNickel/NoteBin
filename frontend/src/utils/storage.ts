@@ -16,3 +16,8 @@ export const setAuthToken = (token: string): void => {
 export const getAuthToken = (): string | null => {
     return localStorage.getItem(SESSION);
 };
+
+export const deleteAuthData = (): void => {
+    localStorage.removeItem(USER);
+    localStorage.removeItem(SESSION);
+};

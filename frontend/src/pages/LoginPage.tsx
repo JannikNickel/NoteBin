@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import ToastContainer from "../components/ToastContainer";
 import { clearToasts, showErrorToast, showSuccessToast } from "../utils/toast-utils";
-import { apiRequest, AuthResponse, UserRequest } from "../api";
+import { apiRequest, AuthResponse, AuthRequest } from "../api";
 import { setAuthToken, setUser } from "../utils/storage";
 
 interface LoginPageProps {
@@ -24,8 +24,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
     };
 
     const handleLogin = async () => {
-        const requestBody: UserRequest = { username, password };
-        const response = await apiRequest<UserRequest, AuthResponse>("/api/auth", requestBody, {
+        const requestBody: AuthRequest = { username, password };
+        const response = await apiRequest<AuthRequest, AuthResponse>("/api/auth", requestBody, {
             method: "POST"
         });
 
@@ -48,8 +48,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
             return;
         }
 
-        const requestBody: UserRequest = { username, password };
-        const response = await apiRequest<UserRequest, {}>("/api/user", requestBody, {
+        const requestBody: AuthRequest = { username, password };
+        const response = await apiRequest<AuthRequest, {}>("/api/user", requestBody, {
             method: "POST"
         });
 

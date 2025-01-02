@@ -12,7 +12,7 @@ namespace NoteBin.Services
         private readonly PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
         private readonly ConcurrentDictionary<string, User> users = new ConcurrentDictionary<string, User>();
 
-        public Task<UserCreationResult> CreateUser(UserRequest request)
+        public Task<UserCreationResult> CreateUser(AuthRequest request)
         {
             if(!UserHelper.ValidateUsername(request.Username))
             {

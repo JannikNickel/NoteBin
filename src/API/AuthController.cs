@@ -20,7 +20,7 @@ namespace NoteBin.API
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserRequest? request)
+        public async Task<IActionResult> Login([FromBody] AuthRequest? request)
         {
             if(!ModelState.IsValid || request == null)
             {
@@ -50,7 +50,19 @@ namespace NoteBin.API
             }
 
             bool valid = await authService.ValidateToken(token) != null;
-            return valid ? base.Ok() : base.Unauthorized();
+            return valid ? Ok() : Unauthorized();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Logout()
+        {
+            string? token = AuthHelper.ReadBearerToken(Request);
+            if(token == null)
+            {
+                return BadRequest();
+            }
+
+            return await authService.Logout(token) ? Ok() : Unauthorized();
         }
     }
 }

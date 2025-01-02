@@ -60,11 +60,10 @@ const NotePage: React.FC = () => {
             });
             if (response.ok) {
                 setNote(response.value);
-                setLoading(false);
             } else {
                 setError(response.error.message);
-                setLoading(false);
             }
+            setLoading(false);
         };
 
         fetchData();
@@ -122,7 +121,7 @@ const NotePage: React.FC = () => {
                                 {`FORKED FROM: [${note.fork}]`}
                         </button>
                     }
-                    <div className="toolbar-element secondary pointer-events-none">
+                    <div className="toolbar-element secondary pointer-events-none select-none">
                         {note?.syntax && getSyntaxDisplayName(note?.syntax)}
                     </div>
                 </div>

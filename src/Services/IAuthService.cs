@@ -7,5 +7,6 @@ namespace NoteBin.Services
     {
         public Task<string> GenerateToken(User user);
         public Task<User?> ValidateToken(string token);
+        Task<bool> Logout(string token);
     }
 }

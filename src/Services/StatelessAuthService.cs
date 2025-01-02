@@ -1,6 +1,7 @@
 using NoteBin.Configuration;
 using NoteBin.Models;
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -37,6 +38,12 @@ namespace NoteBin.Services
                 return await userService.GetUser(username);
             }
             return null;
+        }
+
+        public async Task<bool> Logout(string token)
+        {
+            //Just validate for stateless auth... client will forget the token
+            return await ValidateToken(token) != null;
         }
     }
 }

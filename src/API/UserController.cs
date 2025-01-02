@@ -18,7 +18,7 @@ namespace NoteBin.API
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserRequest? request)
+        public async Task<IActionResult> CreateUser([FromBody] AuthRequest? request)
         {
             if(!ModelState.IsValid || request == null)
             {
@@ -33,6 +33,13 @@ namespace NoteBin.API
                 UserCreationError.DuplicateUsername => ErrorResponse.DuplicateUsername,
                 _ => ErrorResponse.InternalError
             };
+        }
+
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetUserByName(string name)
+        {
+            User? user = await dbService.GetUser(name);
+            return user != null ? Ok(UserResponse.FromUser(user)) : NotFound();
         }
     }
 }

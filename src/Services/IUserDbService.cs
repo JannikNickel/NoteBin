@@ -9,7 +9,7 @@ namespace NoteBin.Services
     public interface IUserDbService
     {
         Task<User?> GetUser(string name);
-        Task<UserCreationResult> CreateUser(UserRequest request);
+        Task<UserCreationResult> CreateUser(AuthRequest request);
         bool VerifyUser(User user, string password);
     }
 }

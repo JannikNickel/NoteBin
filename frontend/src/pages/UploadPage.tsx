@@ -68,12 +68,8 @@ const UploadPage: React.FC = () => {
 
     useEffect(() => {
         const validateUser = async () => {
-            try {
-                const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
-                setIsAuthenticated(response.ok);
-            } catch {
-                setIsAuthenticated(false);
-            }
+            const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
+            setIsAuthenticated(response.ok);
         };
         validateUser();
     }, []);
