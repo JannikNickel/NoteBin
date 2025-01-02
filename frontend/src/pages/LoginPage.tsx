@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import ToastContainer from "../components/ToastContainer";
-import { showErrorToast, showSuccessToast } from "../utils/toast-utils";
+import { clearToasts, showErrorToast, showSuccessToast } from "../utils/toast-utils";
 import { apiRequest, AuthResponse, UserRequest } from "../api";
 import { setAuthToken, setUser } from "../utils/storage";
 
@@ -18,6 +18,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
+    const singleErrorToast = (message: string) => {
+        clearToasts();
+        showErrorToast(message);
+    };
+
     const handleLogin = async () => {
         const requestBody: UserRequest = { username, password };
         const response = await apiRequest<UserRequest, AuthResponse>("/api/auth", requestBody, {
@@ -30,16 +35,16 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
             navigate("/");
         } else {
             if (response.error.statusCode === 401) {
-                showErrorToast("Invalid username or password!");
+                singleErrorToast("Invalid username or password!");
             } else {
-                showErrorToast(response.error.message);
+                singleErrorToast(response.error.message);
             }
         }
     };
 
     const handleSignup = async () => {
         if (password !== confirmPassword) {
-            showErrorToast("Passwords do not match!");
+            singleErrorToast("Passwords do not match!");
             return;
         }
 
@@ -53,7 +58,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
             showSuccessToast("Account created!");
             navigate("/login");
         } else {
-            showErrorToast(response.error.message);
+            singleErrorToast(response.error.message);
         }
     };
 
@@ -68,7 +73,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
 
     return (
         <>
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex flex-col justify-center items-center h-screen">
+                <ToastContainer className="relative top-2 left-0 right-0" />
                 <div className="form-container w-80 p-5 bg-secondary-default rounded-lg">
                     <form onSubmit={handleSubmit}>
                         <p className="w-full mb-8 text-3xl select-none">{isSignup ? "[SIGN UP]" : "[LOGIN]"}</p>
@@ -128,7 +134,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
                     </form>
                 </div>
             </div>
-            <ToastContainer />
         </>
     );
 };

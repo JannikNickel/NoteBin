@@ -1,9 +1,13 @@
 import "../css/toast.css";
 import { ToastContainer as TContainer, Bounce } from "react-toastify";
 
-const ToastContainer: React.FC = () => (
+export interface ToastContainerProps {
+    className?: string;
+};
+
+const ToastContainer: React.FC<ToastContainerProps> = ({ className }) => (
     <TContainer
-        className="toast-container"
+        className={"toast-container " + (className || "")}
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}

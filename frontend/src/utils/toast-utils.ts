@@ -11,3 +11,7 @@ export const showSuccessToast = (msg: string, options?: object): void => {
         ...options
     });
 };
+
+export const clearToasts = (): void => {
+    toast.dismiss();
+};
