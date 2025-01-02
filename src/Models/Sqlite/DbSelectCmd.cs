@@ -18,11 +18,13 @@ namespace NoteBin.Models.Sqlite
         protected void BuildCommand()
         {
             string columns = string.Join(",", columnNames);
-            string command = $"SELECT {columns} FROM {tableName} WHERE {BuildFilter()};";
+            string command = $"SELECT {columns} FROM {tableName} {BuildFilter()} {BuildOrder()} {BuildOther()};";
             cmd.CommandText = command;
         }
 
-        protected abstract string BuildFilter();
+        protected virtual string BuildOrder() => "";
+        protected virtual string BuildFilter() => "";
+        protected virtual string BuildOther() => "";
         protected abstract T ParseDataRow(DbDataReader reader);
 
         public async Task<T?> ReadFirstRowAsync()

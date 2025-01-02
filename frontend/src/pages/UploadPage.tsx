@@ -40,7 +40,7 @@ const UploadPage: React.FC = () => {
         setSubmitting(true);
         try {
             const requestBody: NoteCreateRequest = {
-                name: title,
+                name: title.trim() !== "" ? title : undefined,
                 fork: forkId || undefined,
                 syntax: language.id,
                 content: codeEditorRef.current?.value || ""
@@ -90,7 +90,7 @@ const UploadPage: React.FC = () => {
                 setTitle(note.name);
                 setLanguage(languages.find(lang => lang.id === note.syntax) || languages[0]);
                 if (codeEditorRef.current) {
-                    codeEditorRef.current.value = note.content;
+                    codeEditorRef.current.value = note.content || "";
                 }
             }
             setIsLoadingFork(false);

@@ -3,11 +3,11 @@ using System.Data.SQLite;
 
 namespace NoteBin.Models.Sqlite
 {
-    public class SelectUsersCmd : DbSelectCmd<User>
+    public class SelectUserCmd : DbSelectCmd<User>
     {
         private readonly string name;
 
-        public SelectUsersCmd(SQLiteConnection connection, string name)
+        public SelectUserCmd(SQLiteConnection connection, string name)
             : base(connection, CreateUserTableCmd.TableName, CreateUserTableCmd.Columns)
         {
             this.name = name;
@@ -17,7 +17,7 @@ namespace NoteBin.Models.Sqlite
         protected override string BuildFilter()
         {
             cmd.Parameters.AddWithValue("@username", name);
-            return $"{CreateUserTableCmd.NameColumn} = @username";
+            return $"WHERE {CreateUserTableCmd.NameColumn} = @username";
         }
 
         protected override User ParseDataRow(DbDataReader reader)

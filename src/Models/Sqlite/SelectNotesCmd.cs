@@ -5,29 +5,44 @@ namespace NoteBin.Models.Sqlite
 {
     public class SelectNotesCmd : DbSelectCmd<Note>
     {
-        private readonly string id;
+        private readonly long offset;
+        private readonly long limit;
+        private readonly string? user;
+        private readonly NoteSortOrder sortOrder;
 
-        public SelectNotesCmd(SQLiteConnection connection, string id)
+        public SelectNotesCmd(SQLiteConnection connection, long offset, long limit, string? user = null, NoteSortOrder sortOrder = NoteSortOrder.None)
             : base(connection, CreateNoteTableCmd.TableName, CreateNoteTableCmd.Columns)
         {
-            this.id = id;
+            this.offset = offset;
+            this.limit = limit;
+            this.user = user;
+            this.sortOrder = sortOrder;
             BuildCommand();
         }
 
+        protected override string BuildOrder() => sortOrder switch
+        {
+            NoteSortOrder.CreationTimeDesc => $"ORDER BY {CreateNoteTableCmd.CreationTimeColumn} DESC",
+            _ => ""
+        };
+
         protected override string BuildFilter()
         {
-            cmd.Parameters.AddWithValue("@id", id);
-            return $"{CreateNoteTableCmd.IdColumn} = @id";
+            if(user != null)
+            {
+                cmd.Parameters.AddWithValue("@user", user);
+                return $"WHERE {CreateNoteTableCmd.OwnerColumn} = @user";
+            }
+            return "";
         }
 
-        protected override Note ParseDataRow(DbDataReader reader)
+        protected override string BuildOther()
         {
-            string name = reader.GetString(1);
-            string? owner = reader.GetValue(2) as string;
-            string? fork = reader.GetValue(3) as string;
-            long creationTime = reader.GetInt64(4);
-            string syntax = reader.GetString(5);
-            return new Note(id, name, owner, fork, TimeUtils.FromUnixTimeMilliseconds(creationTime), syntax);
+            cmd.Parameters.AddWithValue("@limit", limit);
+            cmd.Parameters.AddWithValue("@offset", offset);
+            return $"LIMIT @limit OFFSET @offset";
         }
+
+        protected override Note ParseDataRow(DbDataReader reader) => CreateNoteTableCmd.ParseNoteFromRow(reader);
     }
 }

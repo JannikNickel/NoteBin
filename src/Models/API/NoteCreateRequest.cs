@@ -4,9 +4,8 @@ namespace NoteBin.Models.API
 {
     public class NoteCreateRequest
     {
-        [Required(AllowEmptyStrings = true, ErrorMessage = $"{nameof(Name)} is required!")]
         [StringLength(64, ErrorMessage = $"{nameof(Name)} must not exceed 64 characters")]
-        public required string Name { get; set; }
+        public string? Name { get; set; }
 
         [StringLength(64, ErrorMessage = $"{nameof(Fork)} must not exceed 64 characters")]
         public string? Fork { get; set; }

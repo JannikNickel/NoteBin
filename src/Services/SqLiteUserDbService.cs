@@ -57,7 +57,7 @@ namespace NoteBin.Services
         public async Task<User?> GetUser(string name)
         {
             using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
-            using SelectUsersCmd selectCmd = new SelectUsersCmd(connection, name);
+            using SelectUserCmd selectCmd = new SelectUserCmd(connection, name);
             User? user = await selectCmd.ReadFirstRowAsync();
             return user;
         }

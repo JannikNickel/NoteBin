@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NoteBin.Models;
 using NoteBin.Models.API;
 using NoteBin.Services;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NoteBin.API
@@ -39,6 +40,18 @@ namespace NoteBin.API
         {
             Note? note = await dbService.GetNote(id);
             return note != null ? Ok(note) : NotFound();
+        }
+
+        [HttpGet("list")]
+        public async Task<IActionResult> ListNotes([FromBody] NoteListRequest? request)
+        {
+            if(!ModelState.IsValid || request == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            List<Note> notes = await dbService.GetLatestNotes(request.Offset, request.Amount, request.Username);
+            return Ok(notes);
         }
 
         //TODO api for listing items

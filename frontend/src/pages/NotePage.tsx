@@ -74,7 +74,7 @@ const NotePage: React.FC = () => {
             document.querySelectorAll("pre code").forEach((block) => {
                 if (note.syntax === "auto") {
                     loadAllLanguages().then(() => {
-                        const result = hljs.highlightAuto(note.content);
+                        const result = hljs.highlightAuto(note.content || "");
                         block.innerHTML = result.value;
                     });
                 } else {

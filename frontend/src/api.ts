@@ -3,7 +3,7 @@ import { getReasonPhrase } from "http-status-codes";
 import { getAuthToken } from "./utils/storage";
 
 export interface NoteCreateRequest {
-    name: string,
+    name?: string,
     fork?: string,
     syntax: string,
     content: string
@@ -18,7 +18,7 @@ export interface Note {
     owner?: string,
     fork?: string,
     syntax: string,
-    content: string
+    content?: string
 }
 
 export interface AuthRequest {
