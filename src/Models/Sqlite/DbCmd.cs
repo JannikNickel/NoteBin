@@ -14,9 +14,12 @@ namespace NoteBin.Models.Sqlite
             cmd = connection.CreateCommand();
         }
 
-        protected void NextCommand()
+        protected void NextCommand(bool disposePrev = true)
         {
-            cmd.Dispose();
+            if(disposePrev)
+            {
+                cmd.Dispose();
+            }
             cmd = connection.CreateCommand();
         }
 

@@ -37,6 +37,19 @@ namespace NoteBin.Services
             return true;
         }
 
+        public async Task<string?> GetContentPreview(string id, int length)
+        {
+            string path = GetPath(id);
+            if(File.Exists(path))
+            {
+                using StreamReader reader = new StreamReader(path);
+                char[] buffer = new char[length];
+                int read = await reader.ReadAsync(buffer, 0, length);
+                return new string(buffer, 0, read);
+            }
+            return null;
+        }
+
         private string GetPath(string id) => Path.Combine(directory, $"{id}{fileExtension}");
     }
 }

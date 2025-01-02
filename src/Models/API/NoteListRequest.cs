@@ -10,7 +10,7 @@ namespace NoteBin.Models.API
         [Required, Range(0, 100)]
         public long Amount { get; set; }
 
-        [StringLength(32, ErrorMessage = $"{nameof(Username)} must not exceed 32 characters")]
-        public string? Username { get; set; }
+        [StringLength(32, ErrorMessage = $"{nameof(Owner)} must not exceed 32 characters")]
+        public string? Owner { get; set; }
     }
 }

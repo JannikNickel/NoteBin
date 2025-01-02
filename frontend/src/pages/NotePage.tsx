@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import hljs from "highlight.js/lib/core";
 import hljsLangImportMap from "virtual:hljs-lang-import-map";
 import { apiRequest, Note } from "../api";
-import { languages, ProgrammingLanguage } from "../language";
+import { getLanguageDisplayName, languages, ProgrammingLanguage } from "../language";
 
 const NotePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -43,11 +43,6 @@ const NotePage: React.FC = () => {
         if (note?.fork) {
             navigate(`/note/${note.fork}`);
         }
-    };
-
-    const getSyntaxDisplayName = (syntax: string) => {
-        const language = languages.find(lang => lang.id === syntax);
-        return language?.display.toUpperCase() || syntax.toUpperCase();
     };
 
     useEffect(() => {
@@ -122,7 +117,7 @@ const NotePage: React.FC = () => {
                         </button>
                     }
                     <div className="toolbar-element secondary pointer-events-none select-none">
-                        {note?.syntax && getSyntaxDisplayName(note?.syntax)}
+                        {note?.syntax && getLanguageDisplayName(note?.syntax)}
                     </div>
                 </div>
             </div>

@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json.Serialization;
+using NoteBin.Models.Json;
 
 namespace NoteBin.Models
 {
@@ -8,7 +10,10 @@ namespace NoteBin.Models
         public string? Name { get; init; }
         public string? Owner { get; init; }
         public string? Fork { get; init; }
+
+        [JsonConverter(typeof(DateTimeToUtcMillisecondsConverter))]
         public DateTime CreationTime { get; init; }
+
         public string Syntax { get; init; }
         public string? Content { get; set; }
 

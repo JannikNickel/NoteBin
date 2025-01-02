@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
@@ -26,6 +27,26 @@ namespace NoteBin.Models.Sqlite
         protected virtual string BuildFilter() => "";
         protected virtual string BuildOther() => "";
         protected abstract T ParseDataRow(DbDataReader reader);
+
+        public async Task<long> CountTotal()
+        {
+            SQLiteCommand baseCmd = base.cmd;
+            try
+            {
+                base.NextCommand(false);
+                cmd.CommandText = $"SELECT COUNT(*) FROM {tableName} {BuildFilter()}";
+                object? rowCount = await cmd.ExecuteScalarAsync();
+                return Convert.ToInt64(rowCount);
+            }
+            finally
+            {
+                if(base.cmd != baseCmd)
+                {
+                    base.cmd?.Dispose();
+                }
+                base.cmd = baseCmd;
+            }
+        }
 
         public async Task<T?> ReadFirstRowAsync()
         {

@@ -1,0 +1,53 @@
+.user-note-container {
+  display: flex;
+  justify-content: flex-start;
+  padding: 1rem;
+  margin-top: 4rem;
+}
+
+.note-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.note-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.note-header {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  border: 1px solid #444;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+}
+
+.note-header:active,
+.note-header:hover,
+.note-header:focus {
+  outline: none;
+}
+
+.note-header > div:first-child {
+  flex: 1 1 0%;
+  text-align: start;
+}
+
+.note-header > div:not(:first-child) {
+  flex: none;
+  text-align: end;
+}
+
+.note-header > div:last-child {
+  min-width: 6%;
+}
+
+.note-content {
+  padding: 0.5rem 0 1rem 1rem;
+  white-space: pre-wrap;
+}

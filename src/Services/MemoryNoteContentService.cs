@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,6 +21,15 @@ namespace NoteBin.Services
         {
             bool res = storage.TryAdd(id, content);
             return Task.FromResult(res);
+        }
+
+        public Task<string?> GetContentPreview(string id, int length)
+        {
+            if(storage.TryGetValue(id, out string? content))
+            {
+                return Task.FromResult<string?>(content[..Math.Min(length, content.Length)]);
+            }
+            return Task.FromResult<string?>(null);
         }
     }
 }

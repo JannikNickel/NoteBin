@@ -43,20 +43,15 @@ namespace NoteBin.API
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> ListNotes([FromBody] NoteListRequest? request)
+        public async Task<IActionResult> ListNotes([FromQuery] NoteListRequest? request)
         {
             if(!ModelState.IsValid || request == null)
             {
                 return BadRequest(ModelState);
             }
 
-            List<Note> notes = await dbService.GetLatestNotes(request.Offset, request.Amount, request.Username);
-            return Ok(notes);
+            (List<Note> notes, long total) = await dbService.GetLatestNotes(request.Offset, request.Amount, request.Owner);
+            return Ok(new NoteListResponse(notes, total));
         }
-
-        //TODO api for listing items
-        //Paged (offset, amount with limit)
-        //Returns the total amount of available items
-        //Sorted by date?
     }
 }

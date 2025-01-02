@@ -64,18 +64,24 @@ namespace NoteBin.Services
             return note;
         }
 
-        public Task<List<Note>> GetLatestNotes(long offset, long amount, string? user = null)
+        public async Task<(List<Note> notes, long total)> GetLatestNotes(long offset, long amount, string? user = null)
         {
+            List<Note> result;
+            long total;
             lock(_lock)
             {
-                List<Note> result = sortedNotes
+                result = sortedNotes
                     .Where(n => user == null || n.Owner == user)
                     .Skip((int)offset)
                     .Take((int)amount)
                     .ToList();
-
-                return Task.FromResult(result);
+                total = sortedNotes.Count(n => user == null || n.Owner == user);
             }
+            foreach(Note note in result)
+            {
+                note.Content = await contentService.GetContentPreview(note.Id, Constants.NotePreviewLength);
+            }
+            return (result, total);
         }
     }
 }

@@ -14,9 +14,11 @@ export interface NoteCreateResponse {
 }
 
 export interface Note {
+    id: string,
     name: string,
     owner?: string,
     fork?: string,
+    creationTime: number,
     syntax: string,
     content?: string
 }
@@ -38,6 +40,17 @@ export interface User {
     username: string,
     creationTime: number
 }
+
+export interface NoteListRequest {
+    offset: number,
+    amount: number,
+    owner?: string
+}
+
+export interface NoteListResponse {
+    notes: Note[],
+    total: number
+};
 
 export interface RequestError {
     statusCode?: number,
@@ -67,7 +80,14 @@ export async function apiRequest<TReq extends Object, TRes extends Object>(path:
         }
     }
 
-    const body = (requestBody && Object.keys(requestBody).length > 0) ? { body: JSON.stringify(requestBody) } : {}
+    const isEmptyReq = !requestBody || Object.keys(requestBody).length === 0;
+    const isGet = options.method === "GET";
+    if (isGet && !isEmptyReq) {
+        const queryParams = new URLSearchParams(requestBody as Record<string, any>).toString();
+        path += `?${queryParams}`;
+    }
+    
+    let body = !isGet && !isEmptyReq ? { body: JSON.stringify(requestBody) } : {};
     const mergedOptions: RequestInit = {
         headers: {
             ...defHeaders,

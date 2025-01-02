@@ -4,6 +4,7 @@ using NoteBin.Models.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NoteBin.Services
@@ -84,16 +85,24 @@ namespace NoteBin.Services
             return inserted ? note : null;
         }
 
-        public async Task<List<Note>> GetLatestNotes(long offset, long amount, string? user = null)
+        public async Task<(List<Note> notes, long total)> GetLatestNotes(long offset, long amount, string? user = null)
         {
-            List<Note> result = new List<Note>();
+            List<Note> notes = new List<Note>();
             using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
             using SelectNotesCmd selectCmd = new SelectNotesCmd(connection, offset, amount, user, NoteSortOrder.CreationTimeDesc);
+            long totalCount = await selectCmd.CountTotal();
             await foreach(Note note in selectCmd.ReadRowsAsync())
             {
-                result.Add(note);
+                notes.Add(note);
             }
-            return result;
+
+            IEnumerable<Task> previewLoading = notes.Select(async note =>
+            {
+                note.Content = await contentService.GetContentPreview(note.Id, Constants.NotePreviewLength);
+            });
+            await Task.WhenAll(previewLoading);
+
+            return (notes, totalCount);
         }
     }
 }
