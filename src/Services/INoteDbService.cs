@@ -9,6 +9,6 @@ namespace NoteBin.Services
     {
         Task<Note?> GetNote(string id);
         Task<Note?> SaveNote(NoteCreateRequest note, User? owner);
-        Task<(List<Note> notes, long total)> GetLatestNotes(long offset, long amount, string? user = null);
+        Task<(List<Note> notes, long total)> GetNotes(long offset, long amount, string? user = null, string? filter = null);
     }
 }

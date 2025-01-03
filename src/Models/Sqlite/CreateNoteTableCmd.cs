@@ -14,6 +14,7 @@ namespace NoteBin.Models.Sqlite
         public const string CreationTimeColumn = "creation_time";
         public const string SyntaxColumn = "syntax";
 
+        public const string NameIndex = "idx_name";
         public const string OwnerIndex = "idx_owner";
         public const string CreationTimeIndex = "idx_creation_time";
 
@@ -36,6 +37,11 @@ namespace NoteBin.Models.Sqlite
 
         public void Execute()
         {
+            cmd.ExecuteNonQuery();
+
+            //Add index to name column
+            base.NextCommand();
+            cmd.CommandText = $"CREATE INDEX IF NOT EXISTS {NameIndex} ON {tableName}({NameColumn})";
             cmd.ExecuteNonQuery();
 
             //Add index to owner column

@@ -42,7 +42,14 @@ namespace NoteBin.Services
             string path = GetPath(id);
             if(File.Exists(path))
             {
-                using StreamReader reader = new StreamReader(path);
+                FileStreamOptions options = new FileStreamOptions()
+                {
+                    Access = FileAccess.Read,
+                    Share = FileShare.Read,
+                    Mode = FileMode.Open,
+                    Options = FileOptions.Asynchronous
+                };
+                using StreamReader reader = new StreamReader(path, options);
                 char[] buffer = new char[length];
                 int read = await reader.ReadAsync(buffer, 0, length);
                 return new string(buffer, 0, read);

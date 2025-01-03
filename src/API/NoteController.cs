@@ -50,7 +50,7 @@ namespace NoteBin.API
                 return BadRequest(ModelState);
             }
 
-            (List<Note> notes, long total) = await dbService.GetLatestNotes(request.Offset, request.Amount, request.Owner);
+            (List<Note> notes, long total) = await dbService.GetNotes(request.Offset, request.Amount, request.Owner, request.Filter);
             return Ok(new NoteListResponse(notes, total));
         }
     }

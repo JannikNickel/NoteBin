@@ -8,14 +8,16 @@ namespace NoteBin.Models.Sqlite
         private readonly long offset;
         private readonly long limit;
         private readonly string? user;
+        private readonly string? filter;
         private readonly NoteSortOrder sortOrder;
 
-        public SelectNotesCmd(SQLiteConnection connection, long offset, long limit, string? user = null, NoteSortOrder sortOrder = NoteSortOrder.None)
+        public SelectNotesCmd(SQLiteConnection connection, long offset, long limit, string? user = null, string? filter = null, NoteSortOrder sortOrder = NoteSortOrder.None)
             : base(connection, CreateNoteTableCmd.TableName, CreateNoteTableCmd.Columns)
         {
             this.offset = offset;
             this.limit = limit;
             this.user = user;
+            this.filter = filter;
             this.sortOrder = sortOrder;
             BuildCommand();
         }
@@ -28,12 +30,18 @@ namespace NoteBin.Models.Sqlite
 
         protected override string BuildFilter()
         {
+            string query = "";
             if(user != null)
             {
                 cmd.Parameters.AddWithValue("@user", user);
-                return $"WHERE {CreateNoteTableCmd.OwnerColumn} = @user";
+                query = $"WHERE {CreateNoteTableCmd.OwnerColumn} = @user";
             }
-            return "";
+            if(!string.IsNullOrEmpty(filter))
+            {
+                cmd.Parameters.AddWithValue("@filter", filter);
+                query += $"{(query == "" ? "WHERE" : " AND")} {CreateNoteTableCmd.NameColumn} LIKE '%' || @filter || '%'";
+            }
+            return query;
         }
 
         protected override string BuildOther()

@@ -12,5 +12,8 @@ namespace NoteBin.Models.API
 
         [StringLength(32, ErrorMessage = $"{nameof(Owner)} must not exceed 32 characters")]
         public string? Owner { get; set; }
+
+        [StringLength(64, ErrorMessage = $"{nameof(Filter)} must not exceed 32 characters")]
+        public string? Filter { get; set; }
     }
 }

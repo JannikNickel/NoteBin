@@ -44,7 +44,8 @@ export interface User {
 export interface NoteListRequest {
     offset: number,
     amount: number,
-    owner?: string
+    owner?: string,
+    filter?: string
 }
 
 export interface NoteListResponse {
@@ -83,8 +84,13 @@ export async function apiRequest<TReq extends Object, TRes extends Object>(path:
     const isEmptyReq = !requestBody || Object.keys(requestBody).length === 0;
     const isGet = options.method === "GET";
     if (isGet && !isEmptyReq) {
-        const queryParams = new URLSearchParams(requestBody as Record<string, any>).toString();
-        path += `?${queryParams}`;
+        const queryParams = new URLSearchParams();
+        Object.entries(requestBody).forEach(([key, value]) => {
+            if (value !== undefined) {
+                queryParams.append(key, value as string);
+            }
+        });
+        path += `?${queryParams.toString()}`;
     }
     
     let body = !isGet && !isEmptyReq ? { body: JSON.stringify(requestBody) } : {};

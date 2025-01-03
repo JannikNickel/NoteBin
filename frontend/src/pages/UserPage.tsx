@@ -18,6 +18,8 @@ const UserPage: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [searchText, setSearchText] = useState<string>("");
+    const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
     const [notes, setNotes] = useState<Note[]>([]);
     const [totalNotes, setTotalNotes] = useState<number>(0);
     const [currPage, setCurrPage] = useState<number>(1);
@@ -48,6 +50,11 @@ const UserPage: React.FC = () => {
         setCurrPage(Math.min(Math.max(page, 1), totalPages()));
     };
 
+    const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setSearchText(value);
+    };
+
     const queryNotes = async (page: number) => {
         if (!id) {
             return;
@@ -55,7 +62,8 @@ const UserPage: React.FC = () => {
         const request: NoteListRequest = {
             offset: (page - 1) * PAGE_SIZE,
             amount: PAGE_SIZE,
-            owner: id
+            owner: id,
+            filter: searchText.trim() !== "" ? searchText : undefined
         };
         const response = await apiRequest<NoteListRequest, NoteListResponse>(`/api/note/list`, request, {
             method: "GET"
@@ -104,7 +112,15 @@ const UserPage: React.FC = () => {
 
     useEffect(() => {
         queryNotes(currPage);
-    }, [id, currPage]);
+    }, [id, currPage, debouncedSearchText]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setDebouncedSearchText(searchText);
+        }, 250);
+
+        return () => clearTimeout(timeoutId);
+    }, [searchText]);
 
     if (loading) {
         return <p className="p-2">Loading...</p>
@@ -131,7 +147,7 @@ const UserPage: React.FC = () => {
                                 </div>
                             </button>
                             <div className="note-content">
-                                {note.content}
+                                {note.content?.trimEnd()}
                             </div>
                         </div>
                     ))}
@@ -139,9 +155,10 @@ const UserPage: React.FC = () => {
                 <div className="toolbar toolbar-left toolbar-absolute">
                     <input
                         className="toolbar-element secondary min-w-60"
-                        value={""}
+                        value={searchText}
                         placeholder="Search notes..."
-                        maxLength={32} />
+                        maxLength={32}
+                        onChange={handleSearchTextChange} />
                     <button className="toolbar-element secondary" onClick={() => changePage(-1)}>
                         <ChevronLeftIcon className="h-4 w-4" />
                     </button>

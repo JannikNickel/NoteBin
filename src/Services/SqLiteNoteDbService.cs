@@ -85,11 +85,11 @@ namespace NoteBin.Services
             return inserted ? note : null;
         }
 
-        public async Task<(List<Note> notes, long total)> GetLatestNotes(long offset, long amount, string? user = null)
+        public async Task<(List<Note> notes, long total)> GetNotes(long offset, long amount, string? user = null, string? filter = null)
         {
             List<Note> notes = new List<Note>();
             using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
-            using SelectNotesCmd selectCmd = new SelectNotesCmd(connection, offset, amount, user, NoteSortOrder.CreationTimeDesc);
+            using SelectNotesCmd selectCmd = new SelectNotesCmd(connection, offset, amount, user, filter, NoteSortOrder.CreationTimeDesc);
             long totalCount = await selectCmd.CountTotal();
             await foreach(Note note in selectCmd.ReadRowsAsync())
             {

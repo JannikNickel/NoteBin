@@ -64,7 +64,7 @@ namespace NoteBin.Services
             return note;
         }
 
-        public async Task<(List<Note> notes, long total)> GetLatestNotes(long offset, long amount, string? user = null)
+        public async Task<(List<Note> notes, long total)> GetNotes(long offset, long amount, string? user = null, string? filter = null)
         {
             List<Note> result;
             long total;
@@ -72,6 +72,7 @@ namespace NoteBin.Services
             {
                 result = sortedNotes
                     .Where(n => user == null || n.Owner == user)
+                    .Where(n => filter == null || (n.Name?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false))
                     .Skip((int)offset)
                     .Take((int)amount)
                     .ToList();
