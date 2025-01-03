@@ -8,13 +8,14 @@ interface CodeEditorProps {
     placeholder?: string;
     value?: string;
     onChange?: (value: string) => void;
+    onFileDrop?: (file: string) => void;
 }
 
 export interface CodeEditorRef {
     value: string;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placeholder, value, onChange }) => {
+const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placeholder, value, onChange, onFileDrop }) => {
     const editorRef = useRef<HTMLTextAreaElement>(null);
 
     useImperativeHandle(reference, (): CodeEditorRef => ({
@@ -75,13 +76,14 @@ const CodeEditor: React.FC<CodeEditorProps> = (({ reference, className, placehol
     const handleDrop = (e: React.DragEvent<HTMLTextAreaElement>): void => {
         e.preventDefault();
         const files = Array.from(e.dataTransfer.files);
-        const file = files.filter(file => ["text/plain", "application/json"].includes(file.type))[0];
+        const file = files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (event: ProgressEvent<FileReader>) => {
                 const text = event.target?.result as string;
                 if (text) {
                     setValue(text);
+                    onFileDrop?.(file.name);
                 }
             };
             reader.readAsText(file);

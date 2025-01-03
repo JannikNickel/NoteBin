@@ -6,7 +6,7 @@ import CodeEditor, { CodeEditorRef } from "../components/CodeEditor";
 import SyntaxSelector from "../components/SyntaxSelector";
 import ToastContainer from "../components/ToastContainer";
 import { showErrorToast } from "../utils/toast-utils";
-import { ProgrammingLanguage, languages } from "../language";
+import { ProgrammingLanguage, getLanguageFromExtension, languages } from "../language";
 import { apiRequest, Note, NoteCreateRequest, NoteCreateResponse } from "../api";
 import { getUser } from "../utils/storage";
 
@@ -30,6 +30,14 @@ const UploadPage: React.FC = () => {
 
     const handleTitleChange = (e: ChangeEvent<HTMLInputElement>): void => {
         setTitle(e.target.value);
+    };
+
+    const handleFileDrop = (filename: string): void => {
+        setTitle(filename);
+        const extensionIdx = filename.lastIndexOf(".");
+        const extension = extensionIdx !== -1 ? filename.substring(extensionIdx) : filename;
+        const lang = getLanguageFromExtension(extension);
+        setLanguage(lang || languages[0]);
     };
 
     const handleSubmit = async (): Promise<void> => {
@@ -111,7 +119,8 @@ const UploadPage: React.FC = () => {
                 <CodeEditor
                     reference={codeEditorRef}
                     className="text-area"
-                    placeholder="..." />
+                    placeholder="..."
+                    onFileDrop={handleFileDrop} />
             </div>
             <div className="toolbar">
                 <button
