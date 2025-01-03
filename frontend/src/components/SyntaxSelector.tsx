@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react"
-import { ProgrammingLanguage } from "../language";
+import { ProgrammingLanguage } from "../utils/language";
 
 interface SyntaxSelectorProps {
     className?: string;

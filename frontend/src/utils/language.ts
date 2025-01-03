@@ -1,9 +1,9 @@
-import langs from "./assets/languages.json";
+import langs from "../assets/languages.json";
 
 export type ProgrammingLanguage = {
-    id: string,
-    display: string,
-    extensions: string[]
+    id: string;
+    display: string;
+    extensions: string[];
 };
 
 export const getLanguageDisplayName = (id: string): string => {

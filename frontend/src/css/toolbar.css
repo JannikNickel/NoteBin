@@ -30,3 +30,8 @@
 .toolbar-element:focus {
   outline: none;
 }
+
+.toolbar-element-passive {
+  pointer-events: none;
+  user-select: none;
+}

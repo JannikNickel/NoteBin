@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
+/* @import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap"); */
+@font-face {
+  font-family: "Fira Mono";
+  src: url("../assets/fonts/FiraMono-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal
+}
 
 @tailwind base;
 @tailwind components;
@@ -20,6 +26,13 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
+}
+
+.page-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
 
 .primary {
@@ -48,4 +61,8 @@ body {
 .secondary:not(:disabled):active {
   color: theme("colors.primary.text");
   background-color: theme("colors.secondary.active");
+}
+
+.status-text {
+  padding: 0.5rem;
 }

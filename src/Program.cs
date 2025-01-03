@@ -7,7 +7,6 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NoteBin.Configuration;
-using NoteBin.Services;
 using System.IO;
 
 namespace NoteBin

@@ -1,65 +1,65 @@
-import { Err, Ok, Result } from "./utils/result";
 import { getReasonPhrase } from "http-status-codes";
-import { getAuthToken } from "./utils/storage";
+import { Err, Ok, Result } from "../utils/result";
+import { getAuthToken } from "../utils/storage";
 
 export interface NoteCreateRequest {
-    name?: string,
-    fork?: string,
-    syntax: string,
-    content: string
+    name?: string;
+    fork?: string;
+    syntax: string;
+    content: string;
 }
 
 export interface NoteCreateResponse {
-    id: string
+    id: string;
 }
 
 export interface Note {
-    id: string,
-    name: string,
-    owner?: string,
-    fork?: string,
-    creationTime: number,
-    syntax: string,
-    content?: string
+    id: string;
+    name: string;
+    owner?: string;
+    fork?: string;
+    creationTime: number;
+    syntax: string;
+    content?: string;
 }
 
 export interface AuthRequest {
-    username: string,
-    password: string
+    username: string;
+    password: string;
 }
 
 export interface AuthResponse {
-    token: string
+    token: string;
 }
 
 export interface UserRequest {
-    username: string
+    username: string;
 }
 
 export interface User {
-    username: string,
-    creationTime: number
+    username: string;
+    creationTime: number;
 }
 
 export interface NoteListRequest {
-    offset: number,
-    amount: number,
-    owner?: string,
-    filter?: string
+    offset: number;
+    amount: number;
+    owner?: string;
+    filter?: string;
 }
 
 export interface NoteListResponse {
-    notes: Note[],
-    total: number
+    notes: Note[];
+    total: number;
 };
 
 export interface RequestError {
-    statusCode?: number,
-    message: string
+    statusCode?: number;
+    message: string;
 };
 
 interface ErrorResponse {
-    error: string
+    error: string;
 }
 
 async function getErrorMessage(response: Response): Promise<string> {

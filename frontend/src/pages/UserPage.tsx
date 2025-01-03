@@ -1,16 +1,17 @@
 import "../css/toolbar.css";
 import "../css/user.css";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/24/outline";
 import ToastContainer from "../components/ToastContainer";
 import { showErrorToast } from "../utils/toast-utils";
-import { apiRequest, Note, NoteListRequest, NoteListResponse, User } from "../api";
+import { apiRequest, Note, NoteListRequest, NoteListResponse, User } from "../utils/api";
 import { deleteAuthData, getUser } from "../utils/storage";
-import { formatTimeAgo } from "../utils/time-utils";
-import { getLanguageDisplayName } from "../language";
+import { getLanguageDisplayName } from "../utils/language";
+import { formatDateYYYYMMDD, formatTimeAgo } from "../utils/time-utils";
 
 const PAGE_SIZE: number = 25;
+const SEARCH_DEBOUNCE_DURATION: number = 250;
 
 const UserPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -25,10 +26,43 @@ const UserPage: React.FC = () => {
     const [currPage, setCurrPage] = useState<number>(1);
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
+    const totalPages = (): number => Math.ceil(totalNotes / PAGE_SIZE);
+
+    const changePage = (offset: number): void => {
+        const page = currPage + offset;
+        setCurrPage(Math.min(Math.max(page, 1), totalPages()));
+    };
+
+    const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const value = event.target.value;
+        setSearchText(value);
+    };
+
+    const validateUser = async (): Promise<void> => {
+        const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
+        setIsAuthenticated(response.ok);
+    };
+
+    const fetchUser = async (): Promise<void> => {
+        setLoading(true);
+        setError(null);
+
+        const response = await apiRequest<{}, User>(`/api/user/${id}`, {}, {
+            method: "GET"
+        });
+        if (response.ok) {
+            setUser(response.value);
+        } else {
+            setError(response.error.message);
+        }
+        setLoading(false);
+    };
+
+    const handleLogout = async (): Promise<void> => {
         const response = await apiRequest<{}, {}>(`/api/auth`, {}, {
             method: "DELETE"
         }, true);
+        
         if (response.ok) {
             deleteAuthData();
             setIsAuthenticated(false);
@@ -38,24 +72,7 @@ const UserPage: React.FC = () => {
         }
     };
 
-    const formatDate = (utcMilliseconds: number) => {
-        const date = new Date(utcMilliseconds);
-        return date.toISOString().split('T')[0];
-    };
-
-    const totalPages = () => Math.ceil(totalNotes / PAGE_SIZE);
-
-    const changePage = (offset: number) => {
-        const page = currPage + offset;
-        setCurrPage(Math.min(Math.max(page, 1), totalPages()));
-    };
-
-    const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setSearchText(value);
-    };
-
-    const queryNotes = async (page: number) => {
+    const fetchNotes = async (page: number): Promise<void> => {
         const request: NoteListRequest = {
             offset: (page - 1) * PAGE_SIZE,
             amount: PAGE_SIZE,
@@ -73,25 +90,11 @@ const UserPage: React.FC = () => {
         }
     };
 
-    const fetchUser = async () => {
-        setLoading(true);
-        setError(null);
-
-        const response = await apiRequest<{}, User>(`/api/user/${id}`, {}, {
-            method: "GET"
-        });
-        if (response.ok) {
-            setUser(response.value);
-        } else {
-            setError(response.error.message);
+    useEffect(() => {
+        if (id && id === getUser()) {
+            validateUser();
         }
-        setLoading(false);
-    };
-
-    const validateUser = async () => {
-        const response = await apiRequest<{}, {}>("/api/auth", {}, { method: "GET" }, true);
-        setIsAuthenticated(response.ok);
-    };
+    }, []);
 
     useEffect(() => {
         if (id) {
@@ -100,36 +103,31 @@ const UserPage: React.FC = () => {
     }, [id]);
 
     useEffect(() => {
-        if (id && id === getUser()) {
-            validateUser();
-        }
-    }, []);
-
-    useEffect(() => {
-        queryNotes(currPage);
+        fetchNotes(currPage);
     }, [id, currPage, debouncedSearchText]);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
+            setCurrPage(1);
             setDebouncedSearchText(searchText);
-        }, 250);
+        }, SEARCH_DEBOUNCE_DURATION);
 
         return () => clearTimeout(timeoutId);
     }, [searchText]);
 
     if (loading) {
-        return <p className="p-2">Loading...</p>
+        return <p className="status-text">Loading...</p>
     }
     if (error) {
-        return <p className="p-2">Error: {error}</p>
+        return <p className="status-text">Error: {error}</p>
     }
 
     return (
         <>
             <div className="user-note-container">
                 <div className="note-container">
-                    {notes.map((note, index) => (
-                        <div key={index} className="note-item">
+                    {notes.map(note => (
+                        <div key={note.id} className="note-item">
                             <Link className="note-header secondary select-none" to={`/note/${note.id}`}>
                                 <div>
                                     [{note.name || "UNTITLED"}]
@@ -147,7 +145,7 @@ const UserPage: React.FC = () => {
                                 </div>
                             </Link>
                             <div className="note-content">
-                                {note.content?.trimEnd()}
+                                {note.content?.trim()}
                             </div>
                         </div>
                     ))}
@@ -184,10 +182,10 @@ const UserPage: React.FC = () => {
                                         LOGOUT
                                 </button>
                             }
-                            <div className="toolbar-element secondary pointer-events-none">
-                                JOINED: [{user.creationTime && formatDate(user.creationTime)}]
+                            <div className="toolbar-element secondary toolbar-element-passive">
+                                JOINED: [{user.creationTime && formatDateYYYYMMDD(user.creationTime)}]
                             </div>
-                            <div className="toolbar-element secondary pointer-events-none">
+                            <div className="toolbar-element secondary toolbar-element-passive">
                                 [{user?.username}]
                             </div>
                         </>

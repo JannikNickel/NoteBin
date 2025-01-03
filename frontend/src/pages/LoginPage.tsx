@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import ToastContainer from "../components/ToastContainer";
 import { clearToasts, showErrorToast, showSuccessToast } from "../utils/toast-utils";
-import { apiRequest, AuthResponse, AuthRequest } from "../api";
+import { apiRequest, AuthResponse, AuthRequest } from "../utils/api";
 import { setAuthToken, setUser } from "../utils/storage";
 
 interface LoginPageProps {
@@ -18,12 +18,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    const singleErrorToast = (message: string) => {
+    const singleErrorToast = (message: string): void => {
         clearToasts();
         showErrorToast(message);
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (): Promise<void> => {
         const requestBody: AuthRequest = { username, password };
         const response = await apiRequest<AuthRequest, AuthResponse>("/api/auth", requestBody, {
             method: "POST"
@@ -42,7 +42,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
         }
     };
 
-    const handleSignup = async () => {
+    const handleSignup = async (): Promise<void> => {
         if (password !== confirmPassword) {
             singleErrorToast("Passwords do not match!");
             return;
@@ -55,6 +55,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
 
         if (response.ok) {
             setPassword("");
+            clearToasts();
             showSuccessToast("Account created!");
             navigate("/login");
         } else {
@@ -62,12 +63,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
         await (isSignup ? handleSignup() : handleLogin());
     };
 
-    const handleSignupSwitch = () => {
+    const handleSignupSwitch = (): void => {
         navigate(isSignup ? "/login" : "/signup");
     };
 
@@ -124,7 +125,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isSignup }) => {
                         <div className="form-group">
                             <button className="form-group-button primary" type="submit">{isSignup ? "CREATE ACCOUNT" : "LOGIN"}</button>
                         </div>
-                        <div className="separator" />
+                        <div className="login-separator" />
                         <button
                             className="text-button secondary center"
                             type="button"

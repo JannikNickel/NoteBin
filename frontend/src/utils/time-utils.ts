@@ -1,3 +1,8 @@
+export const formatDateYYYYMMDD = (utcMilliseconds: number): string => {
+    const date = new Date(utcMilliseconds);
+    return date.toISOString().split("T")[0];
+};
+
 export const formatTimeAgo = (utcMilliseconds: number): string => {
     const now = Date.now();
     const diff = now - utcMilliseconds;
@@ -6,26 +11,19 @@ export const formatTimeAgo = (utcMilliseconds: number): string => {
         return "just now";
     }
 
-    const seconds = Math.floor(diff / 1000);
-    if (seconds < 60) {
-        return `${seconds}s ago`;
-    }
+    const intervals = [
+        { label: "y", seconds: 365 * 24 * 60 * 60 },
+        { label: "d", seconds: 24 * 60 * 60 },
+        { label: "h", seconds: 60 * 60 },
+        { label: "m", seconds: 60 },
+        { label: "s", seconds: 1 }
+    ];
 
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) {
-        return `${minutes}m ago`;
+    for (const interval of intervals) {
+        const count = Math.floor(diff / (interval.seconds * 1000));
+        if (count >= 1) {
+            return `${count}${interval.label} ago`;
+        }
     }
-
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) {
-        return `${hours}h ago`;
-    }
-
-    const days = Math.floor(hours / 24);
-    if (days < 365) {
-        return `${days}d ago`;
-    }
-
-    const years = Math.floor(days / 365);
-    return `${years}y ago`;
+    return "";
 };
