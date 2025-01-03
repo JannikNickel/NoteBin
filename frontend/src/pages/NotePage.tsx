@@ -2,7 +2,7 @@ import "../css/note.css";
 import "../css/syntax.css";
 import "../css/toolbar.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import hljs from "highlight.js/lib/core";
 import hljsLangImportMap from "virtual:hljs-lang-import-map";
@@ -14,7 +14,6 @@ const NotePage: React.FC = () => {
     const [note, setNote] = useState<Note | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
 
     const loadAllLanguages = async () => {
         const languagePromises = languages.map(async (lang: ProgrammingLanguage) => {
@@ -27,22 +26,6 @@ const NotePage: React.FC = () => {
         if (id !== "auto" && !hljs.getLanguage(id)) {
             const langModule = await hljsLangImportMap[id]();
             hljs.registerLanguage(id, langModule.default);
-        }
-    };
-
-    const handleCreateFork = () => {
-        navigate(`/?fork=${id}`);
-    };
-
-    const handleOwnerClick = () => {
-        if (note?.owner) {
-            navigate(`/user/${note.owner}`);
-        }
-    };
-
-    const handleForkClick = () => {
-        if (note?.fork) {
-            navigate(`/note/${note.fork}`);
         }
     };
 
@@ -99,30 +82,29 @@ const NotePage: React.FC = () => {
                     </pre>
                 </div>
                 <div className="toolbar">
-                    <button
+                    <Link
                         className="toolbar-element primary"
-                        onClick={handleCreateFork}>
+                        to={`/?fork=${id}`}>
                             FORK
-                    </button>
-                    <button
+                    </Link>
+                    <Link
                         className="toolbar-element secondary"
-                        onClick={handleOwnerClick}
-                        disabled={!note?.owner}>
+                        to={note?.owner ? `/user/${note?.owner}` : "/notes"}>
                             {note?.owner ? `OWNER: [${note.owner}]` : "[UNOWNED]"}
-                    </button>
+                    </Link>
                     {note?.fork && 
-                        <button
+                        <Link
                             className="toolbar-element secondary"
-                            onClick={handleForkClick}>
+                            to={`/note/${note.fork}`}>
                                 {`FORKED FROM: [${note.fork}]`}
-                        </button>
+                        </Link>
                     }
                     <div className="toolbar-element secondary pointer-events-none select-none">
                         {note?.syntax && getLanguageDisplayName(note?.syntax)}
                     </div>
-                    <button className="toolbar-element secondary" onClick={() => navigate("/")}>
+                    <Link className="toolbar-element secondary" to="/">
                         <PencilIcon className="h-4 w-4" />
-                    </button>
+                    </Link>
                 </div>
             </div>
         </>

@@ -1,7 +1,7 @@
 import "../css/toolbar.css";
 import "../css/user.css";
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/24/outline";
 import ToastContainer from "../components/ToastContainer";
 import { showErrorToast } from "../utils/toast-utils";
@@ -93,10 +93,6 @@ const UserPage: React.FC = () => {
         setIsAuthenticated(response.ok);
     };
 
-    const handleNoteClick = (noteId: string) => {
-        navigate(`/note/${noteId}`);
-    };
-
     useEffect(() => {
         if (id) {
             fetchUser();
@@ -134,7 +130,7 @@ const UserPage: React.FC = () => {
                 <div className="note-container">
                     {notes.map((note, index) => (
                         <div key={index} className="note-item">
-                            <button className="note-header secondary select-none" onClick={() => handleNoteClick(note.id)}>
+                            <Link className="note-header secondary select-none" to={`/note/${note.id}`}>
                                 <div>
                                     [{note.name || "UNTITLED"}]
                                 </div>
@@ -149,7 +145,7 @@ const UserPage: React.FC = () => {
                                 <div>
                                     {formatTimeAgo(note.creationTime)}
                                 </div>
-                            </button>
+                            </Link>
                             <div className="note-content">
                                 {note.content?.trimEnd()}
                             </div>
@@ -196,9 +192,9 @@ const UserPage: React.FC = () => {
                             </div>
                         </>
                     }
-                    <button className={`toolbar-element ${user ? "secondary" : "primary"} !p-[0.5rem]`} onClick={() => navigate("/")}>
+                    <Link className={`toolbar-element ${user ? "secondary" : "primary"} !p-[0.5rem]`} to="/">
                         <PencilIcon className="h-4 w-4" />
-                    </button>
+                    </Link>
                 </div>
             </div>
             <ToastContainer />
