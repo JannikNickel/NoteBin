@@ -1,2 +1,52 @@
-@NoteBin_HostAddress = http://localhost:5298
+@HostAddress = https://localhost:7188
 
+### Create a new user
+POST {{HostAddress}}/api/user
+Content-Type: application/json
+
+{
+    "username": "testuser{{$randomInt}}",
+    "password": "Password123"
+}
+
+### Get user by name
+GET {{HostAddress}}/api/user/testuser
+Accept: application/json
+
+### Create a new note
+POST {{HostAddress}}/api/note
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "name": "Sample Note",
+    "fork": null,
+    "syntax": "markdown",
+    "content": "Hello World!"
+}
+
+### Get note by id
+GET {{HostAddress}}/api/note/<id>
+Accept: application/json
+
+### List notes
+GET {{HostAddress}}/api/note/list?offset=0&amount=10&owner=&filter=
+Accept: application/json
+
+### Login
+POST {{HostAddress}}/api/auth
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "Password123"
+}
+
+### Validate token
+GET {{HostAddress}}/api/auth
+Authorization: Bearer <token>
+Accept: application/json
+
+### Logout
+DELETE {{HostAddress}}/api/auth
+Authorization: Bearer <token>
