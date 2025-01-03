@@ -2,6 +2,7 @@ import "../css/upload.css";
 import "../css/toolbar.css";
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ListBulletIcon } from "@heroicons/react/24/outline";
 import CodeEditor, { CodeEditorRef } from "../components/CodeEditor";
 import SyntaxSelector from "../components/SyntaxSelector";
 import ToastContainer from "../components/ToastContainer";
@@ -148,6 +149,9 @@ const UploadPage: React.FC = () => {
                     onClick={handleAccount}
                     disabled={submitting}>
                         [{isAuthenticated && getUser() ? getUser() : "LOGIN"}]
+                </button>
+                <button className="toolbar-element secondary" onClick={() => navigate("/notes")}>
+                    <ListBulletIcon className="h-5 w-5" />
                 </button>
             </div>
             <ToastContainer />

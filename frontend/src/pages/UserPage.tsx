@@ -1,8 +1,8 @@
-import "../css/user.css";
 import "../css/toolbar.css";
+import "../css/user.css";
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/24/outline";
 import ToastContainer from "../components/ToastContainer";
 import { showErrorToast } from "../utils/toast-utils";
 import { apiRequest, Note, NoteListRequest, NoteListResponse, User } from "../api";
@@ -15,7 +15,7 @@ const PAGE_SIZE: number = 25;
 const UserPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(id !== undefined);
     const [error, setError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>("");
@@ -56,9 +56,6 @@ const UserPage: React.FC = () => {
     };
 
     const queryNotes = async (page: number) => {
-        if (!id) {
-            return;
-        }
         const request: NoteListRequest = {
             offset: (page - 1) * PAGE_SIZE,
             amount: PAGE_SIZE,
@@ -101,7 +98,9 @@ const UserPage: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchUser();
+        if (id) {
+            fetchUser();
+        }
     }, [id]);
 
     useEffect(() => {
@@ -139,6 +138,11 @@ const UserPage: React.FC = () => {
                                 <div>
                                     [{note.name || "UNTITLED"}]
                                 </div>
+                                {!id &&
+                                    <div className="note-header-user">
+                                        {note?.owner ? `[${note.owner}]` : "[UNOWNED]"}
+                                    </div>
+                                }
                                 <div>
                                     {getLanguageDisplayName(note.syntax)}
                                 </div>
@@ -168,27 +172,34 @@ const UserPage: React.FC = () => {
                     <button className="toolbar-element secondary" onClick={() => changePage(1)}>
                         <ChevronRightIcon className="h-4 w-4" />
                     </button>
-                    <button className="toolbar-element secondary" onClick={() => changePage(100000000)}>
-                        <ChevronDoubleRightIcon className="h-4 w-4" />
+                    {totalPages() > 2 &&
+                        <button className="toolbar-element secondary" onClick={() => changePage(100000000)}>
+                            <ChevronDoubleRightIcon className="h-4 w-4" />
+                        </button>
+                    }
+                </div>
+                <div className="toolbar toolbar-absolute">
+                    {user &&
+                        <>
+                            {isAuthenticated &&
+                                <button
+                                    className="toolbar-element primary"
+                                    onClick={handleLogout}>
+                                        LOGOUT
+                                </button>
+                            }
+                            <div className="toolbar-element secondary pointer-events-none">
+                                JOINED: [{user.creationTime && formatDate(user.creationTime)}]
+                            </div>
+                            <div className="toolbar-element secondary pointer-events-none">
+                                [{user?.username}]
+                            </div>
+                        </>
+                    }
+                    <button className={`toolbar-element ${user ? "secondary" : "primary"} !p-[0.5rem]`} onClick={() => navigate("/")}>
+                        <PencilIcon className="h-4 w-4" />
                     </button>
                 </div>
-                {user &&
-                    <div className="toolbar toolbar-absolute">
-                        {isAuthenticated &&
-                            <button
-                                className="toolbar-element primary"
-                                onClick={handleLogout}>
-                                    LOGOUT
-                            </button>
-                        }
-                        <div className="toolbar-element secondary pointer-events-none">
-                            JOINED: [{user.creationTime && formatDate(user.creationTime)}]
-                        </div>
-                        <div className="toolbar-element secondary pointer-events-none">
-                            {user?.username}
-                        </div>
-                    </div>
-                }
             </div>
             <ToastContainer />
         </>

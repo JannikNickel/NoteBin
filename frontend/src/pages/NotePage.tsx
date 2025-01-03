@@ -3,6 +3,7 @@ import "../css/syntax.css";
 import "../css/toolbar.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import hljs from "highlight.js/lib/core";
 import hljsLangImportMap from "virtual:hljs-lang-import-map";
 import { apiRequest, Note } from "../api";
@@ -119,6 +120,9 @@ const NotePage: React.FC = () => {
                     <div className="toolbar-element secondary pointer-events-none select-none">
                         {note?.syntax && getLanguageDisplayName(note?.syntax)}
                     </div>
+                    <button className="toolbar-element secondary" onClick={() => navigate("/")}>
+                        <PencilIcon className="h-4 w-4" />
+                    </button>
                 </div>
             </div>
         </>

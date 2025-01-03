@@ -41,10 +41,12 @@
 .note-header > div:not(:first-child) {
   flex: none;
   text-align: end;
+  min-width: 6%;
 }
 
-.note-header > div:last-child {
-  min-width: 6%;
+.note-header-user {
+  flex: 1 1 0% !important;
+  text-align: end !important;
 }
 
 .note-content {
