@@ -10,11 +10,11 @@ namespace NoteBin.API
     [Route($"{Constants.ApiPrefix}/user")]
     public class UserController : ControllerBase
     {
-        private readonly IUserDbService dbService;
+        private readonly IUserDbService userService;
 
-        public UserController(IUserDbService dbService)
+        public UserController(IUserDbService userService)
         {
-            this.dbService = dbService;
+            this.userService = userService;
         }
 
         [HttpPost]
@@ -25,7 +25,7 @@ namespace NoteBin.API
                 return BadRequest(ModelState);
             }
 
-            UserCreationResult res = await dbService.CreateUser(request);
+            UserCreationResult res = await userService.CreateUser(request);
             return res.IsOk ? Ok() : res.Error switch
             {
                 UserCreationError.InvalidUsername => ErrorResponse.InvalidUsername,
@@ -38,7 +38,7 @@ namespace NoteBin.API
         [HttpGet("{name}")]
         public async Task<IActionResult> GetUserByName(string name)
         {
-            User? user = await dbService.GetUser(name);
+            User? user = await userService.GetUser(name);
             return user != null ? Ok(UserResponse.FromUser(user)) : NotFound();
         }
     }

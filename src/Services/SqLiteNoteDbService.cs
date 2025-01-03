@@ -11,7 +11,7 @@ namespace NoteBin.Services
 {
     public class SqLiteNoteDbService : INoteDbService
     {
-        private const int insertAttemptLimit = 10;
+        private const int InsertAttemptLimit = 10;
 
         private readonly INoteIdGenService idGenService;
         private readonly INoteContentService contentService;
@@ -61,7 +61,7 @@ namespace NoteBin.Services
             Note? note = null;
             bool inserted = false;
             int attempts = 0;
-            while(!inserted && attempts++ < insertAttemptLimit)
+            while(!inserted && attempts++ < InsertAttemptLimit)
             {
                 string id = idGenService.GenerateId();
                 note = new Note(id, request.Name, owner?.Name, request.Fork, DateTime.UtcNow, request.Syntax);
@@ -79,6 +79,7 @@ namespace NoteBin.Services
                     using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
                     using DeleteNotesCmd command = new DeleteNotesCmd(connection, note.Id);
                     await command.ExecuteAsync();
+                    note = null;
                 }
             }
 

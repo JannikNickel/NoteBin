@@ -1,6 +1,6 @@
+using NoteBin.Models.Json;
 using System;
 using System.Text.Json.Serialization;
-using NoteBin.Models.Json;
 
 namespace NoteBin.Models
 {

@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using NoteBin.Models;
+using System.Threading.Tasks;
 
 namespace NoteBin.Services
 {

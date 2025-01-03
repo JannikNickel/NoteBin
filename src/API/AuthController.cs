@@ -13,9 +13,9 @@ namespace NoteBin.API
         private readonly IUserDbService userService;
         private readonly IAuthService authService;
 
-        public AuthController(IUserDbService dbService, IAuthService authService)
+        public AuthController(IUserDbService userService, IAuthService authService)
         {
-            this.userService = dbService;
+            this.userService = userService;
             this.authService = authService;
         }
 

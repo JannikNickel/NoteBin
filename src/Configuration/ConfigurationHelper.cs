@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace NoteBin.Configuration
 {

@@ -4,17 +4,17 @@ namespace NoteBin.Models.API
 {
     public class NoteCreateRequest
     {
-        [StringLength(64, ErrorMessage = $"{nameof(Name)} must not exceed 64 characters")]
+        [StringLength(Constants.NoteNameLengthLimit)]
         public string? Name { get; set; }
 
-        [StringLength(64, ErrorMessage = $"{nameof(Fork)} must not exceed 64 characters")]
+        [StringLength(Constants.NoteIdLength)]
         public string? Fork { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = $"{nameof(Syntax)} is required!")]
-        [StringLength(32, ErrorMessage = $"{nameof(Syntax)} must not exceed 32 characters")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(Constants.SyntaxLengthLimit)]
         public required string Syntax { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = $"{nameof(Content)} is required!")]
+        [Required(AllowEmptyStrings = false)]
         public required string Content { get; set; }
     }
 }

@@ -58,20 +58,12 @@ namespace NoteBin.Services
         {
             using SQLiteConnection connection = await SqLiteHelper.OpenAsync(connectionString);
             using SelectUserCmd selectCmd = new SelectUserCmd(connection, name);
-            User? user = await selectCmd.ReadFirstRowAsync();
-            return user;
+            return await selectCmd.ReadFirstRowAsync();
         }
 
         public bool VerifyUser(User user, string password)
         {
             return passwordHasher.VerifyHashedPassword(user.Name, user.Password, password) != PasswordVerificationResult.Failed;
-        }
-
-        public enum ErrorType
-        {
-            InvalidInput,
-            DuplicateEntry,
-            InternalException
         }
     }
 }

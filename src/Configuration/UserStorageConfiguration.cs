@@ -16,7 +16,6 @@ namespace NoteBin.Configuration
             services.AddSingleton<IUserDbService>((IServiceProvider provider) =>
             {
                 UserStorageSettings settings = provider.GetRequiredService<IOptions<UserStorageSettings>>().Value;
-
                 return settings.StorageType switch
                 {
                     UserStorageType.Memory => new MemoryUserDbService(),

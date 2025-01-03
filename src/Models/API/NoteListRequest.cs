@@ -7,13 +7,13 @@ namespace NoteBin.Models.API
         [Required, Range(0L, long.MaxValue)]
         public long Offset { get; set; }
 
-        [Required, Range(0, 100)]
+        [Required, Range(0L, Constants.NotePageSizeLimit)]
         public long Amount { get; set; }
 
-        [StringLength(32, ErrorMessage = $"{nameof(Owner)} must not exceed 32 characters")]
+        [StringLength(Constants.UserNameLengthLimit)]
         public string? Owner { get; set; }
 
-        [StringLength(64, ErrorMessage = $"{nameof(Filter)} must not exceed 32 characters")]
+        [StringLength(Constants.NoteNameLengthLimit)]
         public string? Filter { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace NoteBin.Services
 {
     public class FileNoteContentService : INoteContentService
     {
-        private const string fileExtension = ".dat";
+        private const string FileExtension = ".dat";
 
         private readonly string directory;
 
@@ -57,6 +57,6 @@ namespace NoteBin.Services
             return null;
         }
 
-        private string GetPath(string id) => Path.Combine(directory, $"{id}{fileExtension}");
+        private string GetPath(string id) => Path.Combine(directory, $"{id}{FileExtension}");
     }
 }

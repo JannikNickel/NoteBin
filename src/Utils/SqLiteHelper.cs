@@ -9,7 +9,7 @@ namespace NoteBin
 {
     public static class SqLiteHelper
     {
-        public static readonly string[] dataSourceKeys = new string[]
+        public static readonly string[] dataSourceKeys = 
         {
             "Data Source",
             "DataSource",

@@ -1,7 +1,6 @@
 using NoteBin.Models;
 using NoteBin.Models.API;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -57,8 +56,11 @@ namespace NoteBin.Services
             bool savedContent = await contentService.SaveContent(note.Id, request.Content);
             if(!savedContent)
             {
-                notes.Remove(note.Id, out _);
-                sortedNotes.Remove(note);
+                lock(_lock)
+                {
+                    notes.Remove(note.Id, out _);
+                    sortedNotes.Remove(note);
+                }
             }
 
             return note;

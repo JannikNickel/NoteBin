@@ -20,10 +20,7 @@ namespace NoteBin.Models.Sqlite
 
         public static string[] Columns => [IdColumn, NameColumn, OwnerColumn, ForkColumn, CreationTimeColumn, SyntaxColumn];
 
-        public CreateNoteTableCmd(SQLiteConnection connection) : base(connection, TableName)
-        {
-
-        }
+        public CreateNoteTableCmd(SQLiteConnection connection) : base(connection, TableName) { }
 
         protected override IEnumerable<string> GenerateColumns()
         {

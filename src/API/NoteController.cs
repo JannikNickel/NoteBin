@@ -11,12 +11,12 @@ namespace NoteBin.API
     [Route($"{Constants.ApiPrefix}/note")]
     public class NoteController : ControllerBase
     {
-        private readonly INoteDbService dbService;
+        private readonly INoteDbService noteService;
         private readonly IAuthService authService;
 
-        public NoteController(INoteDbService dbService, IAuthService authService)
+        public NoteController(INoteDbService noteService, IAuthService authService)
         {
-            this.dbService = dbService;
+            this.noteService = noteService;
             this.authService = authService;
         }
 
@@ -30,15 +30,14 @@ namespace NoteBin.API
 
             string? token = AuthHelper.ReadBearerToken(Request);
             User? owner = token != null ? await authService.ValidateToken(token) : null;
-
-            Note? res = await dbService.SaveNote(request, owner);
-            return res != null ? Ok(new { id = res.Id }) : ErrorResponse.InternalError;
+            Note? res = await noteService.SaveNote(request, owner);
+            return res != null ? Ok(new NoteCreateResponse(res.Id)) : ErrorResponse.InternalError;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetNoteById(string id)
         {
-            Note? note = await dbService.GetNote(id);
+            Note? note = await noteService.GetNote(id);
             return note != null ? Ok(note) : NotFound();
         }
 
@@ -50,7 +49,7 @@ namespace NoteBin.API
                 return BadRequest(ModelState);
             }
 
-            (List<Note> notes, long total) = await dbService.GetNotes(request.Offset, request.Amount, request.Owner, request.Filter);
+            (List<Note> notes, long total) = await noteService.GetNotes(request.Offset, request.Amount, request.Owner, request.Filter);
             return Ok(new NoteListResponse(notes, total));
         }
     }

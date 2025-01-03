@@ -1,4 +1,3 @@
-using System.Data.Common;
 using System.Data.SQLite;
 
 namespace NoteBin.Models.Sqlite

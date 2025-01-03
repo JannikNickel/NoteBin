@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Threading.Tasks;
 
 namespace NoteBin.Models.Sqlite
 {
@@ -14,10 +12,7 @@ namespace NoteBin.Models.Sqlite
 
         public static string[] Columns => [NameColumn, PasswordColumn, CreationTimeColumn];
 
-        public CreateUserTableCmd(SQLiteConnection connection) : base(connection, TableName)
-        {
-
-        }
+        public CreateUserTableCmd(SQLiteConnection connection) : base(connection, TableName) { }
 
         protected override IEnumerable<string> GenerateColumns()
         {

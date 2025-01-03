@@ -3,9 +3,9 @@ using System.Data.SQLite;
 
 namespace NoteBin.Models.Sqlite
 {
-	public abstract class DbCmd : IDisposable
-	{
-		protected SQLiteConnection connection;
+    public abstract class DbCmd : IDisposable
+    {
+        protected readonly SQLiteConnection connection;
         protected SQLiteCommand cmd;
 
         protected DbCmd(SQLiteConnection connection)

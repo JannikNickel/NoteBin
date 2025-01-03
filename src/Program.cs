@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NoteBin.Configuration;
-using System.IO;
 
 namespace NoteBin
 {
@@ -60,30 +58,7 @@ namespace NoteBin
             }
 
             app.UseRequestLogging();
-
-            string path = Path.GetFullPath("web");//TODO this should be part of the config
-            PhysicalFileProvider webPath = new PhysicalFileProvider(path);
-            app.Environment.WebRootFileProvider = webPath;
-
-            //Serve static files, if not requesting API or existing static files
-            app.Use(async (HttpContext context, RequestDelegate next) =>
-            {
-                HttpRequest request = context.Request;
-                bool isApi = request.Path.StartsWithSegments("/api");
-                if(!isApi && !webPath.GetFileInfo(request.Path.Value?.TrimStart('/') ?? "").Exists)
-                {
-                    request.Path = "/";
-                }
-                await next(context);
-            });
-            app.UseDefaultFiles(new DefaultFilesOptions
-            {
-                FileProvider = webPath
-            });
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = webPath
-            });
+            app.UseStaticFileServing();
         }
 
         private static void ConfigureEndpoints(WebApplication app)

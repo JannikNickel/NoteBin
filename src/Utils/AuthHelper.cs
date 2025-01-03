@@ -5,7 +5,7 @@ namespace NoteBin
 {
     public static class AuthHelper
     {
-        private const string bearerStart = "Bearer ";
+        private const string BearerStart = "Bearer ";
 
         public static string? ReadBearerToken(HttpRequest request)
         {
@@ -13,9 +13,9 @@ namespace NoteBin
             if(header.Count > 0)
             {
                 string authHeader = header.ToString();
-                if(authHeader.StartsWith(bearerStart))
+                if(authHeader.StartsWith(BearerStart))
                 {
-                    return authHeader[bearerStart.Length..].Trim();
+                    return authHeader[BearerStart.Length..].Trim();
                 }
             }
             return null;

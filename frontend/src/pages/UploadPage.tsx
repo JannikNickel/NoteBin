@@ -103,7 +103,7 @@ const UploadPage: React.FC = () => {
             fetchFork();
         }
     }, [forkId]);
-    
+
     if (forkId && isLoadingFork) {
         return <p className="status-text">Loading...</p>
     }
@@ -134,7 +134,7 @@ const UploadPage: React.FC = () => {
                     ref={titleInputRef}
                     className="toolbar-element secondary text-center min-w-36 max-w-80"
                     value={title}
-                    maxLength={64}
+                    maxLength={32}
                     placeholder={!titleInputFocused ? "[UNTITLED]" : ""}
                     onFocus={() => setTitleInputFocused(true)}
                     onBlur={() => setTitleInputFocused(false)}

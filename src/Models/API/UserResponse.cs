@@ -1,5 +1,3 @@
-using System;
-
 namespace NoteBin.Models.API
 {
     public record UserResponse(string Username, long CreationTime)
