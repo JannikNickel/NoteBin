@@ -31,7 +31,6 @@ namespace NoteBin.Services
         private void Initialize()
         {
             SqLiteHelper.EnsureDataDirectory(connectionString);
-
             using SQLiteConnection connection = SqLiteHelper.Open(connectionString);
             using CreateNoteTableCmd createCmd = new CreateNoteTableCmd(connection);
             createCmd.Execute();

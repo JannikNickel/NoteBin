@@ -59,7 +59,7 @@ namespace NoteBin.Test
 
         public static class Services
         {
-            public static INoteIdGenService IdGen => new UuidNoteIdGenService();
+            public static INoteIdGenService IdGen => new RngNoteIdGenService();
             public static INoteContentService NoteContent => new MemoryNoteContentService();
             public static IUserDbService UserDb => new MemoryUserDbService();
             public static INoteDbService NoteDb => new MemoryNoteDbService(IdGen, NoteContent);

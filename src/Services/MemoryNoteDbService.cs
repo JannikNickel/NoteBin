@@ -72,13 +72,16 @@ namespace NoteBin.Services
             long total;
             lock(_lock)
             {
+                bool UserFilter(Note n) => user == null || n.Owner == user;
+                bool OwnerFilter(Note n) => filter == null || (n.Name?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false);
+
                 result = sortedNotes
-                    .Where(n => user == null || n.Owner == user)
-                    .Where(n => filter == null || (n.Name?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false))
+                    .Where(UserFilter)
+                    .Where(OwnerFilter)
                     .Skip((int)offset)
                     .Take((int)amount)
                     .ToList();
-                total = sortedNotes.Count(n => user == null || n.Owner == user);
+                total = sortedNotes.Count(n => UserFilter(n) && OwnerFilter(n));
             }
             foreach(Note note in result)
             {

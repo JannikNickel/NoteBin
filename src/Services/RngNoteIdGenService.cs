@@ -1,8 +1,9 @@
 using System;
+using System.Security.Cryptography;
 
 namespace NoteBin.Services
 {
-    public class UuidNoteIdGenService : INoteIdGenService
+    public class RngNoteIdGenService : INoteIdGenService
     {
         private const int Length = Constants.NoteIdLength;
         private const string Base62Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -10,7 +11,7 @@ namespace NoteBin.Services
         public string GenerateId()
         {
             Span<byte> guid = stackalloc byte[16];
-            Guid.NewGuid().TryWriteBytes(guid);
+            RandomNumberGenerator.Fill(guid);
 
             Span<char> id = stackalloc char[Length];
             for(int i = 0;i < Length;i++)

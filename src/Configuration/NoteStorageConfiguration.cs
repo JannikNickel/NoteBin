@@ -13,7 +13,7 @@ namespace NoteBin.Configuration
         {
             ConfigurationHelper.AddValidatedSettings<NoteStorageSettings>(services, configuration);
 
-            services.AddSingleton<INoteIdGenService, UuidNoteIdGenService>();
+            services.AddSingleton<INoteIdGenService, RngNoteIdGenService>();
             services.AddSingleton<INoteContentService>((IServiceProvider provider) =>
             {
                 NoteStorageSettings settings = provider.GetRequiredService<IOptions<NoteStorageSettings>>().Value;

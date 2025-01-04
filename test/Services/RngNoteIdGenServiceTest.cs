@@ -5,9 +5,9 @@ using System.Linq;
 namespace NoteBin.Test.Services
 {
     [TestClass]
-    public sealed class UuidNoteIdGenServiceTest
+    public sealed class RngNoteIdGenServiceTest
     {
-        private UuidNoteIdGenService service = new UuidNoteIdGenService();
+        private RngNoteIdGenService service = new RngNoteIdGenService();
 
         [TestMethod, DataRow(100000)]
         public void GeneratedIds_AreUnique(int samples)
