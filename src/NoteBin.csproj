@@ -1,17 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+	</ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="xcopy &quot;$(SolutionDir)/web&quot; &quot;$(TargetDir)web&quot; /E /I /Y" />
-  </Target>
+	<Target Name="CopyWebDirectory" AfterTargets="Build">
+		<ItemGroup>
+			<StaticWebFiles Include="$(SolutionDir)/web/**/*" />
+		</ItemGroup>
+
+		<Copy SourceFiles="@(StaticWebFiles)" DestinationFolder="$(TargetDir)/web" SkipUnchangedFiles="true" />
+	</Target>
 
 </Project>
