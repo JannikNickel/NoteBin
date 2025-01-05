@@ -124,7 +124,9 @@ The `appsettings.json` will be copied to the `publish` directory when building.
      ```
 
 ### Running the application
-Assuming `appSettings.json` is correctly configured, starting `NoteBin.exe` from the `publish/` directory will start the server.
+Assuming `appSettings.json` is correctly configured, starting `NoteBin.exe` from the `publish/` directory will start the server.  
+`NoteBin.exe` will also serve static files from the `web/` directory.  
+On Linux, run `dotnet NoteBin.dll` instead or build binaries for the correct platform.
 
 # Backend API
 See also: [NoteBin.http](src/NoteBin.http)
