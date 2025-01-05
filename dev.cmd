@@ -1,9 +1,11 @@
+@echo off
+
 :: Build frontend
-call npm run --prefix "%~dp0frontend" build
+call npm run --prefix "%~dp0/frontend" build
 
 if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
-:: Build + test backend
+:: Build backend
 dotnet build
 
 if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
