@@ -12,10 +12,10 @@
 
 	<Target Name="CopyWebDirectory" AfterTargets="Build">
 		<ItemGroup>
-			<StaticWebFiles Include="$(SolutionDir)/web/**/*" />
+			<StaticWebFiles Include="$(SolutionDir)/web/**/*.*" />
 		</ItemGroup>
 
-		<Copy SourceFiles="@(StaticWebFiles)" DestinationFolder="$(TargetDir)/web" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(StaticWebFiles)" DestinationFolder="$(TargetDir)/web/%(RecursiveDir)" SkipUnchangedFiles="true" />
 	</Target>
 
 </Project>

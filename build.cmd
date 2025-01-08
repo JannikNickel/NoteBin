@@ -1,8 +1,7 @@
 @echo off
 
 :: Delete publish folder
-rmdir /S /Q "%~dp0publish"
-if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
+rmdir /S /Q "%~dp0publish" > nul 2>&1
 
 :: Install npm packages
 pushd "%~dp0/frontend"
