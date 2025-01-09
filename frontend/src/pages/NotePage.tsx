@@ -85,14 +85,14 @@ const NotePage: React.FC = () => {
                     </pre>
                 </div>
                 <div className="toolbar">
-                    <Link className="toolbar-element primary" to={`/?fork=${id}`}>
+                    <Link className="toolbar-element primary select-none" to={`/?fork=${id}`}>
                         FORK
                     </Link>
-                    <Link className="toolbar-element secondary" to={note?.owner ? `/user/${note?.owner}` : "/notes"}>
+                    <Link className="toolbar-element secondary select-none" to={note?.owner ? `/user/${note?.owner}` : "/notes"}>
                         {note?.owner ? `OWNER: [${note.owner}]` : "[UNOWNED]"}
                     </Link>
                     {note?.fork && 
-                        <Link className="toolbar-element secondary" to={`/note/${note.fork}`}>
+                        <Link className="toolbar-element secondary select-none" to={`/note/${note.fork}`}>
                             {`FORKED FROM: [${note.fork}]`}
                         </Link>
                     }

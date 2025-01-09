@@ -26,7 +26,7 @@ const UserPage: React.FC = () => {
     const [currPage, setCurrPage] = useState<number>(1);
     const navigate = useNavigate();
 
-    const totalPages = (): number => Math.ceil(totalNotes / PAGE_SIZE);
+    const totalPages = (): number => Math.max(Math.ceil(totalNotes / PAGE_SIZE), 1);
 
     const changePage = (offset: number): void => {
         const page = currPage + offset;

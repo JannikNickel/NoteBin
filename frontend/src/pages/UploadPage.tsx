@@ -46,7 +46,7 @@ const UploadPage: React.FC = () => {
         setSubmitting(true);
         try {
             const requestBody: NoteCreateRequest = {
-                name: title.trim() || undefined,
+                name: title?.trim() || undefined,
                 fork: forkId || undefined,
                 syntax: language.id,
                 content: codeEditorRef.current?.value || ""
